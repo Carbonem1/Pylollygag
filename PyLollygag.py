@@ -1,6 +1,75 @@
 import requests
 import time
 
+def getChampionList():
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    
+    response = requests.get(URL)
+    if response.status_code != 200:
+        print("Couldn't get champion list. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+
+    print("Champions:\n")
+    for champion in response['data']:
+        id = str(response['data'][champion]['id'])
+        title = str(response['data'][champion]['title'])
+        name = str(response['data'][champion]['name'])
+        key = str(response['data'][champion]['key'])
+
+        print("\t" + name + ":\n")
+        print("\t\tid: " + id + "\n")
+        print("\t\ttitle: " + title + "\n")
+        print("\t\tname: " + name + "\n")
+        print("\t\tkey: " + key + "\n")
+    
+def getItemList():
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    
+    response = requests.get(URL)
+    if response.status_code != 200:
+        print("Couldn't get item list. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+
+    print("Items:\n")
+    for item in response['data']:
+        id = str(response['data'][item]['id'])
+        name = str(response['data'][item]['name'])
+
+        print("\t" + name + ":\n")
+        print("\t\tid: " + id + "\n")
+        print("\t\tname: " + name + "\n")
+    
+def getMasteryList():
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    
+    response = requests.get(URL)
+    if response.status_code != 200:
+        print("Couldn't get mastery list. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+
+    print("Masteries:\n")
+    for mastery in response['data']:
+        id = str(response['data'][mastery]['id'])
+        name = str(response['data'][mastery]['name'])
+        description = str(response['data'][mastery]['description'])
+
+        print("\t" + name + ":\n")
+        print("\t\tid: " + id + "\n")
+        print("\t\tname: " + name + "\n")
+        print("\t\tdescription: " + description + "\n")
+    
+def getRuneList():
+    return
+    
+def getSummonerSpellList():
+    return
+    
 def getSummonerDetails(id):
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/" + id + "?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
@@ -29,7 +98,7 @@ def getSummonerMatches(id):
     if response.status_code != 200:
         print("Couldn't get player's matches. \nError, bad status code: ." + str(response.status_code))
         return
-        
+
     response = response.json()
     matches = 0
 
@@ -37,7 +106,7 @@ def getSummonerMatches(id):
         for match in response['matches']:
             matches += 1
             matchNumber = str(matches)
-                
+
             region = str(match['region'])
             platformId = str(match['platformId'])
             matchId = str(match['matchId'])
@@ -60,7 +129,7 @@ def getSummonerMatches(id):
             print("\trole: " + role + "\n")
 
             getMatchDetails(match['matchId'])
-    
+
         totalGames = str(response['totalGames'])
         print("Total Games: " + totalGames + "\n")
 
@@ -74,7 +143,7 @@ def getMatchDetails(id):
     if response.status_code != 200:
         print("Couldn't get mtach details. \nError, bad status code: ." + str(response.status_code))
         return
-        
+
     response = response.json()
 
     region = str(response['region'])
@@ -95,29 +164,35 @@ def getMatchDetails(id):
 
         print("\t\t\t\tMasteries:\n")
         masteries = 0
-        for mastery in participant['masteries']:
-            masteries += 1
-            masteryNumber = str(masteries)
-            
-            rank = str(mastery['rank'])
-            masteryId = str(mastery['masteryId'])
+        try:
+            for mastery in participant['masteries']:
+                masteries += 1
+                masteryNumber = str(masteries)
 
-            print("\t\t\t\t\tMastery " + masteryNumber + ":\n")
-            print("\t\t\t\t\t\trank: " + rank + "\n")
-            print("\t\t\t\t\t\tmasteryId: " + masteryId + "\n")
+                rank = str(mastery['rank'])
+                masteryId = str(mastery['masteryId'])
+
+                print("\t\t\t\t\tMastery " + masteryNumber + ":\n")
+                print("\t\t\t\t\t\trank: " + rank + "\n")
+                print("\t\t\t\t\t\tmasteryId: " + masteryId + "\n")
+        except KeyError:
+            print("\t\t\t\t\tNo masteries found")
 
         print("\t\t\t\tRunes:\n")
         runes = 0
-        for rune in participant['runes']:
-            runes += 1
-            runeNumber = str(runes)
-            
-            rank = str(rune['rank'])
-            runeId = str(rune['runeId'])
+        try:
+            for rune in participant['runes']:
+                runes += 1
+                runeNumber = str(runes)
 
-            print("\t\t\t\t\tRune " + runeNumber + ":\n")
-            print("\t\t\t\t\t\trank: " + rank + "\n")
-            print("\t\t\t\t\t\truneId: " + runeId + "\n")
+                rank = str(rune['rank'])
+                runeId = str(rune['runeId'])
+
+                print("\t\t\t\t\tRune " + runeNumber + ":\n")
+                print("\t\t\t\t\t\trank: " + rank + "\n")
+                print("\t\t\t\t\t\truneId: " + runeId + "\n")
+        except KeyError:
+            print("\t\t\t\t\tNo runes found")
 
         unrealKills = str(participant['stats']['unrealKills'])
         item0 = str(participant['stats']['item0'])
@@ -350,7 +425,7 @@ def getMatchDetails(id):
             if 'thirtyToEnd' in str(participant['timeline']['damageTakenPerMinDeltas']):
                 damageTakenPerMinDeltasThirtyToEnd = str(participant['timeline']['damageTakenPerMinDeltas']['thirtyToEnd'])
                 print("\t\t\t\t\t\tdamageTakenPerMinDeltasThirtyToEnd: " + damageTakenPerMinDeltasThirtyToEnd + "\n")
-        
+
         role = str(participant['timeline']['role'])
         lane = str(participant['timeline']['lane'])
 
@@ -370,14 +445,19 @@ def getMatchDetails(id):
         print("\t\t\t\tchampionId: " + championId + "\n")
         print("\t\t\t\tteamId: " + teamId + "\n")
         print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
-        
+
     time.sleep(1)
-    
-    
+
+
 def main():
+    getChampionList()
+    getItemList()
+    getMasteryList()
+    '''
     for i in range(1, 1000):
         getSummonerDetails(i)
         getSummonerMatches(i)
+    '''
 
 if __name__ == "__main__":
     main()
