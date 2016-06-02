@@ -1,8 +1,24 @@
 import requests
+import pypyodbc
 import time
+from Constants import *
 
+def insertSummonerRecord(id, name):
+    connection = pypyodbc.connect('Driver={' + DRIVER + '};'
+                                'Server=' + SERVER + ';'
+                                'Database=' + DATABASE + ';'
+                                'uid=' + UID + ';pwd=' + PWD)
+    
+    cursor = connection.cursor() SQLCommand = ("INSERT INTO Players "
+                 "(id, name) "
+                 "VALUES (?,?)")
+    values = [id, name]
+    cursor.execute(SQLCommand, values)
+    connection.commit()
+    connection.close()
+    
 def getChampionList():
-    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
@@ -25,7 +41,7 @@ def getChampionList():
         print("\t\tkey: " + key + "\n")
     
 def getItemList():
-    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
@@ -44,7 +60,7 @@ def getItemList():
         print("\t\tname: " + name + "\n")
     
 def getMasteryList():
-    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
@@ -72,7 +88,7 @@ def getSummonerSpellList():
     
 def getSummonerDetails(id):
     id = str(id)
-    URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/" + id + "?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/" + id + "?api_key=" + KEY
 
     response = requests.get(URL)
     if response.status_code != 200:
@@ -88,11 +104,13 @@ def getSummonerDetails(id):
     print("ID: " + ID)
     print("Name: " + name)
 
+    insertSummonerRecord(ID, name)
+
     time.sleep(1)
 
 def getSummonerMatches(id):
     id = str(id)
-    URL = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + id + "?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + id + "?api_key=" + KEY
 
     response = requests.get(URL)
     if response.status_code != 200:
@@ -137,7 +155,7 @@ def getSummonerMatches(id):
 
 def getMatchDetails(id):
     id = str(id)
-    URL = "https://na.api.pvp.net/api/lol/na/v2.2/match/" + id + "?api_key=9895de8b-d837-4865-9bb2-f6ae87a4b209"
+    URL = "https://na.api.pvp.net/api/lol/na/v2.2/match/" + id + "?api_key=" + KEY
 
     response = requests.get(URL)
     if response.status_code != 200:
@@ -458,6 +476,9 @@ def main():
         getSummonerDetails(i)
         getSummonerMatches(i)
     '''
+
+    insertRecord()
+
 
 if __name__ == "__main__":
     main()
