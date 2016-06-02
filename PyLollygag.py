@@ -4,17 +4,29 @@ import time
 from Constants import *
 
 def insertSummonerRecord(id, name):
+    
     connection = pypyodbc.connect('Driver={' + DRIVER + '};'
                                 'Server=' + SERVER + ';'
                                 'Database=' + DATABASE + ';'
                                 'uid=' + UID + ';pwd=' + PWD)
-    
-    cursor = connection.cursor() SQLCommand = ("INSERT INTO Players "
-                 "(id, name) "
-                 "VALUES (?,?)")
-    values = [id, name]
+    cursor = connection.cursor()
+    SQLCommand = ("SELECT * "
+                  "FROM Player "
+                  "WHERE id = ?")
+    values = [id]
+    cursor = connection.cursor()
     cursor.execute(SQLCommand, values)
-    connection.commit()
+    results = cursor.fetchone()
+    
+    if str(results) == "None":
+        print("inserting...")
+        SQLCommand = ("INSERT INTO Player "
+                     "(id, name) "
+                     "VALUES (?,?)")
+        values = [id, name]
+        cursor.execute(SQLCommand, values)
+        connection.commit()
+        
     connection.close()
     
 def getChampionList():
@@ -159,7 +171,7 @@ def getMatchDetails(id):
 
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get mtach details. \nError, bad status code: ." + str(response.status_code))
+        print("Couldn't get match details. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
@@ -468,16 +480,16 @@ def getMatchDetails(id):
 
 
 def main():
+    '''
     getChampionList()
     getItemList()
     getMasteryList()
     '''
-    for i in range(1, 1000):
+    
+    for i in range(950, 1050):
         getSummonerDetails(i)
-        getSummonerMatches(i)
-    '''
-
-    insertRecord()
+        #getSummonerMatches(i)
+    
 
 
 if __name__ == "__main__":
