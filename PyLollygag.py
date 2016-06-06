@@ -3,6 +3,44 @@ import pypyodbc
 import time
 from Constants import *
 
+# -----Algorithms-----
+def algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
+    if role == "adc":
+        return adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
+
+    if role == "support":
+        return supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal)
+
+    if role == "mid":
+        return midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
+
+    if role == "top":
+        return topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken)
+
+    if role == "jungle":
+        return jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)
+
+def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
+    score = 0
+    return score
+
+def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal):
+    score = 0
+    return score
+
+def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
+    score = 0
+    return score
+
+def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken):
+    score = 0
+    return score
+
+def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
+    score = 0
+    return score
+
+# -----SQL inserts-----
 def insertSummonerRecord(id, name):
     
     connection = pypyodbc.connect('Driver={' + DRIVER + '};'
@@ -19,7 +57,7 @@ def insertSummonerRecord(id, name):
     results = cursor.fetchone()
     
     if str(results) == "None":
-        print("inserting...")
+        print("inserting player...")
         SQLCommand = ("INSERT INTO Player "
                      "(id, name) "
                      "VALUES (?,?)")
@@ -28,7 +66,37 @@ def insertSummonerRecord(id, name):
         connection.commit()
         
     connection.close()
+
+def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
     
+    connection = pypyodbc.connect('Driver={' + DRIVER + '};'
+                                'Server=' + SERVER + ';'
+                                'Database=' + DATABASE + ';'
+                                'uid=' + UID + ';pwd=' + PWD)
+    
+    if season == "SEASON2016":
+        cursor = connection.cursor()
+        SQLCommand = ("SELECT * "
+                      "FROM Season2016 "
+                      "WHERE MatchID = ?")
+        values = [id]
+        cursor = connection.cursor()
+        cursor.execute(SQLCommand, values)
+        results = cursor.fetchone()
+    
+    if str(results) == "None":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+            print("inserting match...")
+            SQLCommand = ("INSERT INTO Season2016 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, team2PlayerIDs, team2PerformanceIDs, WinningTeam) "
+                        "VALUES (?, ?, ?, ?, ?, ?)")
+            values = [id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, values)
+            connection.commit()
+        
+    connection.close()
+    
+# -----Get Static Data-----
 def getChampionList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=" + KEY
     
@@ -97,7 +165,8 @@ def getRuneList():
     
 def getSummonerSpellList():
     return
-    
+
+# -----Get Summoner Data-----
 def getSummonerDetails(id):
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/" + id + "?api_key=" + KEY
@@ -120,6 +189,7 @@ def getSummonerDetails(id):
 
     time.sleep(1)
 
+# -----Get Basic Match Data-----
 def getSummonerMatches(id):
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + id + "?api_key=" + KEY
@@ -158,14 +228,15 @@ def getSummonerMatches(id):
             print("\tlane: " + lane + "\n")
             print("\trole: " + role + "\n")
 
-            getMatchDetails(match['matchId'])
+            getMatchDetails(matchId, season, queue)
 
         totalGames = str(response['totalGames'])
         print("Total Games: " + totalGames + "\n")
 
     time.sleep(1)
 
-def getMatchDetails(id):
+# -----Get Match Details-----
+def getMatchDetails(id, season, queue):
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v2.2/match/" + id + "?api_key=" + KEY
 
@@ -179,6 +250,11 @@ def getMatchDetails(id):
     region = str(response['region'])
     matchType = str(response['matchType'])
     matchCreation = str(response['matchCreation'])
+
+    team1PlayerIds = ""
+    team1PerformanceIds = ""
+    team2PlayerIds = ""
+    team2PerformanceIds = ""
 
     print("\tMatch Details:\n")
     print("\t\tregion: " + region + "\n")
@@ -469,6 +545,17 @@ def getMatchDetails(id):
         teamId = str(participant['teamId'])
         highestAchievedSeasonTier = str(participant['highestAchievedSeasonTier'])
 
+        team1PlayerIds += participantId + "/"
+        team1PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+        team2PlayerIds += participantId + "/"
+        team2PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+        if winner == True:
+            winningTeam = teamId
+        elif teamId == "100":
+            winningTeam = "200"
+        else:
+            winningTeam = "100"
+        
         print("\t\t\t\tspell1Id: " + spell1Id + "\n")
         print("\t\t\t\tspell2Id: " + spell2Id + "\n")
         print("\t\t\t\tparticipantId: " + participantId + "\n")
@@ -476,6 +563,8 @@ def getMatchDetails(id):
         print("\t\t\t\tteamId: " + teamId + "\n")
         print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
 
+    insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue)
+    
     time.sleep(1)
 
 
@@ -488,7 +577,7 @@ def main():
     
     for i in range(950, 1050):
         getSummonerDetails(i)
-        #getSummonerMatches(i)
+        getSummonerMatches(i)
     
 
 
