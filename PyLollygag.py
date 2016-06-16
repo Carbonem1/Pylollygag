@@ -57,7 +57,8 @@ def insertSummonerRecord(id, name):
     results = cursor.fetchone()
     
     if str(results) == "None":
-        print("inserting player...")
+        if PRINT:
+            print("inserting player " + id + "...")
         SQLCommand = ("INSERT INTO Player "
                      "(id, name) "
                      "VALUES (?,?)")
@@ -84,15 +85,16 @@ def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         cursor.execute(SQLCommand, values)
         results = cursor.fetchone()
     
-    if str(results) == "None":
-        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
-            print("inserting match...")
-            SQLCommand = ("INSERT INTO Season2016 "
-                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, team2PlayerIDs, team2PerformanceIDs, WinningTeam) "
-                        "VALUES (?, ?, ?, ?, ?, ?)")
-            values = [id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-            cursor.execute(SQLCommand, values)
-            connection.commit()
+        if str(results) == "None":
+            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                if PRINT:
+                    print("inserting match " + id + "...")
+                SQLCommand = ("INSERT INTO Season2016 "
+                            "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, team2PlayerIDs, team2PerformanceIDs, WinningTeam) "
+                            "VALUES (?, ?, ?, ?, ?, ?)")
+                values = [id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                cursor.execute(SQLCommand, values)
+                connection.commit()
         
     connection.close()
     
@@ -109,107 +111,122 @@ def getChampionList():
     
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get champion list. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get champion list. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
 
-    print("Champions:\n")
+    if PRINT:
+        print("Champions:\n")
     for champion in response['data']:
         id = str(response['data'][champion]['id'])
         title = str(response['data'][champion]['title'])
         name = str(response['data'][champion]['name'])
         key = str(response['data'][champion]['key'])
 
-        print("\t" + name + ":\n")
-        print("\t\tid: " + id + "\n")
-        print("\t\ttitle: " + title + "\n")
-        print("\t\tname: " + name + "\n")
-        print("\t\tkey: " + key + "\n")
+        if PRINT:
+            print("\t" + name + ":\n")
+            print("\t\tid: " + id + "\n")
+            print("\t\ttitle: " + title + "\n")
+            print("\t\tname: " + name + "\n")
+            print("\t\tkey: " + key + "\n")
     
 def getItemList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get item list. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get item list. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
 
-    print("Items:\n")
+    if PRINT:
+        print("Items:\n")
     for item in response['data']:
         id = str(response['data'][item]['id'])
         name = str(response['data'][item]['name'])
 
-        print("\t" + name + ":\n")
-        print("\t\tid: " + id + "\n")
-        print("\t\tname: " + name + "\n")
+        if PRINT:
+            print("\t" + name + ":\n")
+            print("\t\tid: " + id + "\n")
+            print("\t\tname: " + name + "\n")
     
 def getMasteryList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get mastery list. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get mastery list. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
 
-    print("Masteries:\n")
+    if PRINT:
+        print("Masteries:\n")
     for mastery in response['data']:
         id = str(response['data'][mastery]['id'])
         name = str(response['data'][mastery]['name'])
         description = str(response['data'][mastery]['description'])
 
-        print("\t" + name + ":\n")
-        print("\t\tid: " + id + "\n")
-        print("\t\tname: " + name + "\n")
-        print("\t\tdescription: " + description + "\n")
-    
+        if PRINT:
+            print("\t" + name + ":\n")
+            print("\t\tid: " + id + "\n")
+            print("\t\tname: " + name + "\n")
+            print("\t\tdescription: " + description + "\n")
+        
 def getRuneList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get rune list. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get rune list. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
 
-    print("Runes:\n")
+    if PRINT:
+        print("Runes:\n")
     for rune in response['data']:
         id = str(response['data'][rune]['id'])
         name = str(response['data'][rune]['name'])
         description = str(response['data'][rune]['description'])
 
-        print("\t" + name + ":\n")
-        print("\t\tid: " + id + "\n")
-        print("\t\tname: " + name + "\n")
-        print("\t\tdescription: " + description + "\n")
+        if PRINT:
+            print("\t" + name + ":\n")
+            print("\t\tid: " + id + "\n")
+            print("\t\tname: " + name + "\n")
+            print("\t\tdescription: " + description + "\n")
     
 def getSummonerSpellList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/summoner-spell?api_key=" + KEY
     
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get summoner spell list. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get summoner spell list. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
 
-    print("Summoner Spells:\n")
+    if PRINT:
+        print("Summoner Spells:\n")
     for summonerSpell in response['data']:
         id = str(response['data'][summonerSpell]['id'])
         name = str(response['data'][summonerSpell]['name'])
         description = str(response['data'][summonerSpell]['description'])
         summonerLevel = str(response['data'][summonerSpell]['summonerLevel'])
 
-        print("\t" + name + ":\n")
-        print("\t\tid: " + id + "\n")
-        print("\t\tname: " + name + "\n")
-        print("\t\tdescription: " + description + "\n")
-        print("\t\tsummonerLevel: " + summonerLevel + "\n")
+        if PRINT:
+            print("\t" + name + ":\n")
+            print("\t\tid: " + id + "\n")
+            print("\t\tname: " + name + "\n")
+            print("\t\tdescription: " + description + "\n")
+            print("\t\tsummonerLevel: " + summonerLevel + "\n")
 
 # -----Get Summoner Data-----
 def getSummonerDetails(id):
@@ -218,7 +235,8 @@ def getSummonerDetails(id):
 
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get player details. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get player details. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
@@ -227,8 +245,9 @@ def getSummonerDetails(id):
     profileIconId = response[id]['profileIconId']
     revisionDate = response[id]['revisionDate']
 
-    print("ID: " + ID)
-    print("Name: " + name)
+    if PRINT:
+        print("ID: " + ID)
+        print("Name: " + name)
 
     insertSummonerRecord(ID, name)
 
@@ -241,7 +260,8 @@ def getSummonerMatches(id):
 
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get player's matches. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get player's matches. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
@@ -262,21 +282,23 @@ def getSummonerMatches(id):
             lane = str(match['lane'])
             role = str(match['role'])
 
-            print("Match: " + matchNumber + "\n")
-            print("\tregion: " + region + "\n")
-            print("\tplatformId: " + platformId + "\n")
-            print("\tmatchId: " + matchId + "\n")
-            print("\tchampion: " + champion + "\n")
-            print("\tqueue: " + queue + "\n")
-            print("\tseason: " + season + "\n")
-            print("\ttimestamp: " + timestamp + "\n")
-            print("\tlane: " + lane + "\n")
-            print("\trole: " + role + "\n")
+            if PRINT:
+                print("Match: " + matchNumber + "\n")
+                print("\tregion: " + region + "\n")
+                print("\tplatformId: " + platformId + "\n")
+                print("\tmatchId: " + matchId + "\n")
+                print("\tchampion: " + champion + "\n")
+                print("\tqueue: " + queue + "\n")
+                print("\tseason: " + season + "\n")
+                print("\ttimestamp: " + timestamp + "\n")
+                print("\tlane: " + lane + "\n")
+                print("\trole: " + role + "\n")
 
             getMatchDetails(matchId, season, queue)
 
         totalGames = str(response['totalGames'])
-        print("Total Games: " + totalGames + "\n")
+        if PRINT:
+            print("Total Games: " + totalGames + "\n")
 
     time.sleep(1)
 
@@ -287,7 +309,8 @@ def getMatchDetails(id, season, queue):
 
     response = requests.get(URL)
     if response.status_code != 200:
-        print("Couldn't get match details. \nError, bad status code: ." + str(response.status_code))
+        if PRINT:
+            print("Couldn't get match details. \nError, bad status code: ." + str(response.status_code))
         return
 
     response = response.json()
@@ -301,19 +324,19 @@ def getMatchDetails(id, season, queue):
     team2PlayerIds = ""
     team2PerformanceIds = ""
 
-    print("\tMatch Details:\n")
-    print("\t\tregion: " + region + "\n")
-    print("\t\tmatchType: " + matchType + "\n")
-    print("\t\tmatchCreation: " + matchCreation + "\n")
-
-    print("\t\tParticipants:\n")
+    if PRINT:
+        print("\tMatch Details:\n")
+        print("\t\tregion: " + region + "\n")
+        print("\t\tmatchType: " + matchType + "\n")
+        print("\t\tmatchCreation: " + matchCreation + "\n")
+        print("\t\tParticipants:\n")
     participants = 0
     for participant in response['participants']:
         participants += 1
         participantNumber = str(participants)
-        print("\t\t\tParticipant " + participantNumber + ":\n")
-
-        print("\t\t\t\tMasteries:\n")
+        if PRINT:
+            print("\t\t\tParticipant " + participantNumber + ":\n")
+            print("\t\t\t\tMasteries:\n")
         masteries = 0
         try:
             for mastery in participant['masteries']:
@@ -323,13 +346,16 @@ def getMatchDetails(id, season, queue):
                 rank = str(mastery['rank'])
                 masteryId = str(mastery['masteryId'])
 
-                print("\t\t\t\t\tMastery " + masteryNumber + ":\n")
-                print("\t\t\t\t\t\trank: " + rank + "\n")
-                print("\t\t\t\t\t\tmasteryId: " + masteryId + "\n")
+                if PRINT:
+                    print("\t\t\t\t\tMastery " + masteryNumber + ":\n")
+                    print("\t\t\t\t\t\trank: " + rank + "\n")
+                    print("\t\t\t\t\t\tmasteryId: " + masteryId + "\n")
         except KeyError:
-            print("\t\t\t\t\tNo masteries found")
+            if PRINT:
+                print("\t\t\t\t\tNo masteries found")
 
-        print("\t\t\t\tRunes:\n")
+        if PRINT:
+            print("\t\t\t\tRunes:\n")
         runes = 0
         try:
             for rune in participant['runes']:
@@ -339,11 +365,13 @@ def getMatchDetails(id, season, queue):
                 rank = str(rune['rank'])
                 runeId = str(rune['runeId'])
 
-                print("\t\t\t\t\tRune " + runeNumber + ":\n")
-                print("\t\t\t\t\t\trank: " + rank + "\n")
-                print("\t\t\t\t\t\truneId: " + runeId + "\n")
+                if PRINT:
+                    print("\t\t\t\t\tRune " + runeNumber + ":\n")
+                    print("\t\t\t\t\t\trank: " + rank + "\n")
+                    print("\t\t\t\t\t\truneId: " + runeId + "\n")
         except KeyError:
-            print("\t\t\t\t\tNo runes found")
+            if PRINT:
+                print("\t\t\t\t\tNo runes found")
 
         unrealKills = str(participant['stats']['unrealKills'])
         item0 = str(participant['stats']['item0'])
@@ -404,184 +432,222 @@ def getMatchDetails(id, season, queue):
         neutralMinionsKilled = str(participant['stats']['neutralMinionsKilled'])
         combatPlayerScore = str(participant['stats']['combatPlayerScore'])
 
-        print("\t\t\t\tStats:\n")
-        print("\t\t\t\t\tunrealKills: " + unrealKills + "\n")
-        print("\t\t\t\t\titem0: " + item0 + "\n")
-        print("\t\t\t\t\titem1: " + item1 + "\n")
-        print("\t\t\t\t\titem2: " + item2 + "\n")
-        print("\t\t\t\t\titem3: " + item3 + "\n")
-        print("\t\t\t\t\titem4: " + item4 + "\n")
-        print("\t\t\t\t\titem5: " + item5 + "\n")
-        print("\t\t\t\t\titem6: " + item6 + "\n")
-        print("\t\t\t\t\ttotalDamageTaken: " + totalDamageTaken + "\n")
-        print("\t\t\t\t\tpentaKills: " + pentaKills + "\n")
-        print("\t\t\t\t\tsightWardsBoughtInGame: " + sightWardsBoughtInGame + "\n")
-        print("\t\t\t\t\twinner: " + winner + "\n")
-        print("\t\t\t\t\tmagicDamageDealt: " + magicDamageDealt + "\n")
-        print("\t\t\t\t\twardsKilled: " + wardsKilled + "\n")
-        print("\t\t\t\t\tlargestCriticalStrike: " + largestCriticalStrike + "\n")
-        print("\t\t\t\t\ttrueDamageDealt: " + trueDamageDealt + "\n")
-        print("\t\t\t\t\tdoubleKills: " + doubleKills + "\n")
-        print("\t\t\t\t\tphysicalDamageDealt: " + physicalDamageDealt + "\n")
-        print("\t\t\t\t\ttripleKills: " + tripleKills + "\n")
-        print("\t\t\t\t\tdeaths: " + deaths + "\n")
-        print("\t\t\t\t\tfirstBloodAssist: " + firstBloodAssist + "\n")
-        print("\t\t\t\t\tmagicDamageDealtToChampions: " + magicDamageDealtToChampions + "\n")
-        print("\t\t\t\t\tassists: " + assists + "\n")
-        print("\t\t\t\t\tvisionWardsBoughtInGame: " + visionWardsBoughtInGame + "\n")
-        print("\t\t\t\t\ttotalTimeCrowdControlDealt: " + totalTimeCrowdControlDealt + "\n")
-        print("\t\t\t\t\tchampLevel: " + champLevel + "\n")
-        print("\t\t\t\t\tphysicalDamageTaken: " + physicalDamageTaken + "\n")
-        print("\t\t\t\t\ttotalDamageDealt: " + totalDamageDealt + "\n")
-        print("\t\t\t\t\tlargestKillingSpree: " + largestKillingSpree + "\n")
-        print("\t\t\t\t\tinhibitorKills: " + inhibitorKills + "\n")
-        print("\t\t\t\t\tminionsKilled: " + minionsKilled + "\n")
-        print("\t\t\t\t\ttowerKills: " + towerKills + "\n")
-        print("\t\t\t\t\tphysicalDamageDealtToChampions: " + physicalDamageDealtToChampions + "\n")
-        print("\t\t\t\t\tquadraKills: " + quadraKills + "\n")
-        print("\t\t\t\t\tgoldSpent: " + goldSpent + "\n")
-        print("\t\t\t\t\ttotalDamageDealtToChampions: " + totalDamageDealtToChampions + "\n")
-        print("\t\t\t\t\tgoldEarned: " + goldEarned + "\n")
-        print("\t\t\t\t\tneutralMinionsKilledTeamJungle: " + neutralMinionsKilledTeamJungle + "\n")
-        print("\t\t\t\t\tfirstBloodKill: " + firstBloodKill + "\n")
-        print("\t\t\t\t\tfirstTowerKill: " + firstTowerKill + "\n")
-        print("\t\t\t\t\twardsPlaced: " + wardsPlaced + "\n")
-        print("\t\t\t\t\ttrueDamageDealtToChampions: " + trueDamageDealtToChampions + "\n")
-        print("\t\t\t\t\tkillingSprees: " + killingSprees + "\n")
-        print("\t\t\t\t\tfirstInhibitorKill: " + firstInhibitorKill + "\n")
-        print("\t\t\t\t\ttotalScoreRank: " + totalScoreRank + "\n")
-        print("\t\t\t\t\ttotalUnitsHealed: " + totalUnitsHealed + "\n")
-        print("\t\t\t\t\tkills: " + kills + "\n")
-        print("\t\t\t\t\tfirstInhibitorAssist: " + firstInhibitorAssist + "\n")
-        print("\t\t\t\t\ttotalPlayerScore: " + totalPlayerScore + "\n")
-        print("\t\t\t\t\tneutralMinionsKilledEnemyJungle: " + neutralMinionsKilledEnemyJungle + "\n")
-        print("\t\t\t\t\tmagicDamageTaken: " + magicDamageTaken + "\n")
-        print("\t\t\t\t\tlargestMultiKill: " + largestMultiKill + "\n")
-        print("\t\t\t\t\ttotalHeal: " + totalHeal + "\n")
-        print("\t\t\t\t\tobjectivePlayerScore: " + objectivePlayerScore + "\n")
-        print("\t\t\t\t\tfirstTowerAssist: " + firstTowerAssist + "\n")
-        print("\t\t\t\t\ttrueDamageTaken: " + trueDamageTaken + "\n")
-        print("\t\t\t\t\tneutralMinionsKilled: " + neutralMinionsKilled + "\n")
-        print("\t\t\t\t\tcombatPlayerScore: " + combatPlayerScore + "\n")
+        if PRINT:
+            print("\t\t\t\tStats:\n")
+            print("\t\t\t\t\tunrealKills: " + unrealKills + "\n")
+            print("\t\t\t\t\titem0: " + item0 + "\n")
+            print("\t\t\t\t\titem1: " + item1 + "\n")
+            print("\t\t\t\t\titem2: " + item2 + "\n")
+            print("\t\t\t\t\titem3: " + item3 + "\n")
+            print("\t\t\t\t\titem4: " + item4 + "\n")
+            print("\t\t\t\t\titem5: " + item5 + "\n")
+            print("\t\t\t\t\titem6: " + item6 + "\n")
+            print("\t\t\t\t\ttotalDamageTaken: " + totalDamageTaken + "\n")
+            print("\t\t\t\t\tpentaKills: " + pentaKills + "\n")
+            print("\t\t\t\t\tsightWardsBoughtInGame: " + sightWardsBoughtInGame + "\n")
+            print("\t\t\t\t\twinner: " + winner + "\n")
+            print("\t\t\t\t\tmagicDamageDealt: " + magicDamageDealt + "\n")
+            print("\t\t\t\t\twardsKilled: " + wardsKilled + "\n")
+            print("\t\t\t\t\tlargestCriticalStrike: " + largestCriticalStrike + "\n")
+            print("\t\t\t\t\ttrueDamageDealt: " + trueDamageDealt + "\n")
+            print("\t\t\t\t\tdoubleKills: " + doubleKills + "\n")
+            print("\t\t\t\t\tphysicalDamageDealt: " + physicalDamageDealt + "\n")
+            print("\t\t\t\t\ttripleKills: " + tripleKills + "\n")
+            print("\t\t\t\t\tdeaths: " + deaths + "\n")
+            print("\t\t\t\t\tfirstBloodAssist: " + firstBloodAssist + "\n")
+            print("\t\t\t\t\tmagicDamageDealtToChampions: " + magicDamageDealtToChampions + "\n")
+            print("\t\t\t\t\tassists: " + assists + "\n")
+            print("\t\t\t\t\tvisionWardsBoughtInGame: " + visionWardsBoughtInGame + "\n")
+            print("\t\t\t\t\ttotalTimeCrowdControlDealt: " + totalTimeCrowdControlDealt + "\n")
+            print("\t\t\t\t\tchampLevel: " + champLevel + "\n")
+            print("\t\t\t\t\tphysicalDamageTaken: " + physicalDamageTaken + "\n")
+            print("\t\t\t\t\ttotalDamageDealt: " + totalDamageDealt + "\n")
+            print("\t\t\t\t\tlargestKillingSpree: " + largestKillingSpree + "\n")
+            print("\t\t\t\t\tinhibitorKills: " + inhibitorKills + "\n")
+            print("\t\t\t\t\tminionsKilled: " + minionsKilled + "\n")
+            print("\t\t\t\t\ttowerKills: " + towerKills + "\n")
+            print("\t\t\t\t\tphysicalDamageDealtToChampions: " + physicalDamageDealtToChampions + "\n")
+            print("\t\t\t\t\tquadraKills: " + quadraKills + "\n")
+            print("\t\t\t\t\tgoldSpent: " + goldSpent + "\n")
+            print("\t\t\t\t\ttotalDamageDealtToChampions: " + totalDamageDealtToChampions + "\n")
+            print("\t\t\t\t\tgoldEarned: " + goldEarned + "\n")
+            print("\t\t\t\t\tneutralMinionsKilledTeamJungle: " + neutralMinionsKilledTeamJungle + "\n")
+            print("\t\t\t\t\tfirstBloodKill: " + firstBloodKill + "\n")
+            print("\t\t\t\t\tfirstTowerKill: " + firstTowerKill + "\n")
+            print("\t\t\t\t\twardsPlaced: " + wardsPlaced + "\n")
+            print("\t\t\t\t\ttrueDamageDealtToChampions: " + trueDamageDealtToChampions + "\n")
+            print("\t\t\t\t\tkillingSprees: " + killingSprees + "\n")
+            print("\t\t\t\t\tfirstInhibitorKill: " + firstInhibitorKill + "\n")
+            print("\t\t\t\t\ttotalScoreRank: " + totalScoreRank + "\n")
+            print("\t\t\t\t\ttotalUnitsHealed: " + totalUnitsHealed + "\n")
+            print("\t\t\t\t\tkills: " + kills + "\n")
+            print("\t\t\t\t\tfirstInhibitorAssist: " + firstInhibitorAssist + "\n")
+            print("\t\t\t\t\ttotalPlayerScore: " + totalPlayerScore + "\n")
+            print("\t\t\t\t\tneutralMinionsKilledEnemyJungle: " + neutralMinionsKilledEnemyJungle + "\n")
+            print("\t\t\t\t\tmagicDamageTaken: " + magicDamageTaken + "\n")
+            print("\t\t\t\t\tlargestMultiKill: " + largestMultiKill + "\n")
+            print("\t\t\t\t\ttotalHeal: " + totalHeal + "\n")
+            print("\t\t\t\t\tobjectivePlayerScore: " + objectivePlayerScore + "\n")
+            print("\t\t\t\t\tfirstTowerAssist: " + firstTowerAssist + "\n")
+            print("\t\t\t\t\ttrueDamageTaken: " + trueDamageTaken + "\n")
+            print("\t\t\t\t\tneutralMinionsKilled: " + neutralMinionsKilled + "\n")
+            print("\t\t\t\t\tcombatPlayerScore: " + combatPlayerScore + "\n")
 
-        print("\t\t\t\tTimeline:\n")
+        if PRINT:
+            print("\t\t\t\tTimeline:\n")
         if 'xpDiffPerMinDeltas' in str(participant['timeline']):
             xpDiffPerMinDeltas = str(participant['timeline']['xpDiffPerMinDeltas'])
-            print("\t\t\t\t\txpDiffPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\txpDiffPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['xpDiffPerMinDeltas']):
                 xpDiffPerMinDeltasZeroToTen = str(participant['timeline']['xpDiffPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\txpDiffPerMinDeltasZeroToTen: " + xpDiffPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpDiffPerMinDeltasZeroToTen: " + xpDiffPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['xpDiffPerMinDeltas']):
                 xpDiffPerMinDeltasTenToTwenty = str(participant['timeline']['xpDiffPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\txpDiffPerMinDeltasTenToTwenty: " + xpDiffPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpDiffPerMinDeltasTenToTwenty: " + xpDiffPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['xpDiffPerMinDeltas']):
                 xpDiffPerMinDeltasTwentyToThirty = str(participant['timeline']['xpDiffPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\txpDiffPerMinDeltasTwentyToThirty: " + xpDiffPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpDiffPerMinDeltasTwentyToThirty: " + xpDiffPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['xpDiffPerMinDeltas']):
                 xpDiffPerMinDeltasThirtyToEnd = str(participant['timeline']['xpDiffPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\txpDiffPerMinDeltasThirtyToEnd: " + xpDiffPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpDiffPerMinDeltasThirtyToEnd: " + xpDiffPerMinDeltasThirtyToEnd + "\n")
 
         if 'damageTakenDiffPerMinDeltas' in str(participant['timeline']):
             damageTakenDiffPerMinDeltas = str(participant['timeline']['damageTakenDiffPerMinDeltas'])
-            print("\t\t\t\t\tdamageTakenDiffPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\tdamageTakenDiffPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['damageTakenDiffPerMinDeltas']):
                 damageTakenDiffPerMinDeltasZeroToTen = str(participant['timeline']['damageTakenDiffPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasZeroToTen: " + damageTakenDiffPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasZeroToTen: " + damageTakenDiffPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['damageTakenDiffPerMinDeltas']):
                 damageTakenDiffPerMinDeltasTenToTwenty = str(participant['timeline']['damageTakenDiffPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasTenToTwenty: " + damageTakenDiffPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasTenToTwenty: " + damageTakenDiffPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['damageTakenDiffPerMinDeltas']):
                 damageTakenDiffPerMinDeltasTwentyToThirty = str(participant['timeline']['damageTakenDiffPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasTwentyToThirty: " + damageTakenDiffPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasTwentyToThirty: " + damageTakenDiffPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['damageTakenDiffPerMinDeltas']):
                 damageTakenDiffPerMinDeltasThirtyToEnd = str(participant['timeline']['damageTakenDiffPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasThirtyToEnd: " + damageTakenDiffPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenDiffPerMinDeltasThirtyToEnd: " + damageTakenDiffPerMinDeltasThirtyToEnd + "\n")
 
         if 'xpPerMinDeltas' in str(participant['timeline']):
             xpPerMinDeltas = str(participant['timeline']['xpPerMinDeltas'])
-            print("\t\t\t\t\txpPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\txpPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['xpPerMinDeltas']):
                 xpPerMinDeltasZeroToTen = str(participant['timeline']['xpPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\txpPerMinDeltasZeroToTen: " + xpPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpPerMinDeltasZeroToTen: " + xpPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['xpPerMinDeltas']):
                 xpPerMinDeltasTenToTwenty = str(participant['timeline']['xpPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\txpPerMinDeltasTenToTwenty: " + xpPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpPerMinDeltasTenToTwenty: " + xpPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['xpPerMinDeltas']):
                 xpPerMinDeltasTwentyToThirty = str(participant['timeline']['xpPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\txpPerMinDeltasTwentyToThirty: " + xpPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpPerMinDeltasTwentyToThirty: " + xpPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['xpPerMinDeltas']):
                 xpPerMinDeltasThirtyToEnd = str(participant['timeline']['xpPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\txpPerMinDeltasThirtyToEnd: " + xpPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\txpPerMinDeltasThirtyToEnd: " + xpPerMinDeltasThirtyToEnd + "\n")
 
         if 'goldPerMinDeltas' in str(participant['timeline']):
             goldPerMinDeltas = str(participant['timeline']['goldPerMinDeltas'])
-            print("\t\t\t\t\tgoldPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\tgoldPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['goldPerMinDeltas']):
                 goldPerMinDeltasZeroToTen = str(participant['timeline']['goldPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\tgoldPerMinDeltasZeroToTen: " + goldPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tgoldPerMinDeltasZeroToTen: " + goldPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['goldPerMinDeltas']):
                 goldPerMinDeltasTenToTwenty = str(participant['timeline']['goldPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\tgoldPerMinDeltasTenToTwenty: " + goldPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tgoldPerMinDeltasTenToTwenty: " + goldPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['goldPerMinDeltas']):
                 goldPerMinDeltasTwentyToThirty = str(participant['timeline']['goldPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\tgoldPerMinDeltasTwentyToThirty: " + goldPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tgoldPerMinDeltasTwentyToThirty: " + goldPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['goldPerMinDeltas']):
                 goldPerMinDeltasThirtyToEnd = str(participant['timeline']['goldPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\tgoldPerMinDeltasThirtyToEnd: " + goldPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tgoldPerMinDeltasThirtyToEnd: " + goldPerMinDeltasThirtyToEnd + "\n")
 
         if 'creepsPerMinDeltas' in str(participant['timeline']):
             creepsPerMinDeltas = str(participant['timeline']['creepsPerMinDeltas'])
-            print("\t\t\t\t\tcreepsPerMinDeltas:\n")
+            if PRINT:
+                rint("\t\t\t\t\tcreepsPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['creepsPerMinDeltas']):
                 creepsPerMinDeltasZeroToTen = str(participant['timeline']['creepsPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\tcreepsPerMinDeltasZeroToTen: " + creepsPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcreepsPerMinDeltasZeroToTen: " + creepsPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['creepsPerMinDeltas']):
                 creepsPerMinDeltasTenToTwenty = str(participant['timeline']['creepsPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\tcreepsPerMinDeltasTenToTwenty: " + creepsPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcreepsPerMinDeltasTenToTwenty: " + creepsPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['creepsPerMinDeltas']):
                 creepsPerMinDeltasTwentyToThirty = str(participant['timeline']['creepsPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\tcreepsPerMinDeltasTwentyToThirty: " + creepsPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcreepsPerMinDeltasTwentyToThirty: " + creepsPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['creepsPerMinDeltas']):
                 creepsPerMinDeltasThirtyToEnd = str(participant['timeline']['creepsPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\tcreepsPerMinDeltasThirtyToEnd: " + creepsPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcreepsPerMinDeltasThirtyToEnd: " + creepsPerMinDeltasThirtyToEnd + "\n")
 
         if 'csDiffPerMinDeltas' in str(participant['timeline']):
             csDiffPerMinDeltas = str(participant['timeline']['csDiffPerMinDeltas'])
-            print("\t\t\t\t\tcsDiffPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\tcsDiffPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['csDiffPerMinDeltas']):
                 csDiffPerMinDeltasZeroToTen = str(participant['timeline']['csDiffPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\tcsDiffPerMinDeltasZeroToTen: " + csDiffPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcsDiffPerMinDeltasZeroToTen: " + csDiffPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['csDiffPerMinDeltas']):
                 csDiffPerMinDeltasTenToTwenty = str(participant['timeline']['csDiffPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\tcsDiffPerMinDeltasTenToTwenty: " + csDiffPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcsDiffPerMinDeltasTenToTwenty: " + csDiffPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['csDiffPerMinDeltas']):
                 csDiffPerMinDeltasTwentyToThirty = str(participant['timeline']['csDiffPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\tcsDiffPerMinDeltasTwentyToThirty: " + csDiffPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcsDiffPerMinDeltasTwentyToThirty: " + csDiffPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['csDiffPerMinDeltas']):
                 csDiffPerMinDeltasThirtyToEnd = str(participant['timeline']['csDiffPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\tcsDiffPerMinDeltasThirtyToEnd: " + csDiffPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tcsDiffPerMinDeltasThirtyToEnd: " + csDiffPerMinDeltasThirtyToEnd + "\n")
 
         if 'damageTakenPerMinDeltas' in str(participant['timeline']):
             damageTakenPerMinDeltas = str(participant['timeline']['damageTakenPerMinDeltas'])
-            print("\t\t\t\t\tdamageTakenPerMinDeltas:\n")
+            if PRINT:
+                print("\t\t\t\t\tdamageTakenPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['damageTakenPerMinDeltas']):
                 damageTakenPerMinDeltasZeroToTen = str(participant['timeline']['damageTakenPerMinDeltas']['zeroToTen'])
-                print("\t\t\t\t\t\tdamageTakenPerMinDeltasZeroToTen: " + damageTakenPerMinDeltasZeroToTen + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenPerMinDeltasZeroToTen: " + damageTakenPerMinDeltasZeroToTen + "\n")
             if 'tenToTwenty' in str(participant['timeline']['damageTakenPerMinDeltas']):
                 damageTakenPerMinDeltasTenToTwenty = str(participant['timeline']['damageTakenPerMinDeltas']['tenToTwenty'])
-                print("\t\t\t\t\t\tdamageTakenPerMinDeltasTenToTwenty: " + damageTakenPerMinDeltasTenToTwenty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenPerMinDeltasTenToTwenty: " + damageTakenPerMinDeltasTenToTwenty + "\n")
             if 'twentyToThirty' in str(participant['timeline']['damageTakenPerMinDeltas']):
                 damageTakenPerMinDeltasTwentyToThirty = str(participant['timeline']['damageTakenPerMinDeltas']['twentyToThirty'])
-                print("\t\t\t\t\t\tdamageTakenPerMinDeltasTwentyToThirty: " + damageTakenPerMinDeltasTwentyToThirty + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenPerMinDeltasTwentyToThirty: " + damageTakenPerMinDeltasTwentyToThirty + "\n")
             if 'thirtyToEnd' in str(participant['timeline']['damageTakenPerMinDeltas']):
                 damageTakenPerMinDeltasThirtyToEnd = str(participant['timeline']['damageTakenPerMinDeltas']['thirtyToEnd'])
-                print("\t\t\t\t\t\tdamageTakenPerMinDeltasThirtyToEnd: " + damageTakenPerMinDeltasThirtyToEnd + "\n")
+                if PRINT:
+                    print("\t\t\t\t\t\tdamageTakenPerMinDeltasThirtyToEnd: " + damageTakenPerMinDeltasThirtyToEnd + "\n")
 
         role = str(participant['timeline']['role'])
         lane = str(participant['timeline']['lane'])
 
-        print("\t\t\t\trole: " + role + "\n")
-        print("\t\t\t\tlane: " + lane + "\n")
+        if PRINT:
+            print("\t\t\t\trole: " + role + "\n")
+            print("\t\t\t\tlane: " + lane + "\n")
 
         spell1Id = str(participant['spell1Id'])
         spell2Id = str(participant['spell2Id'])
@@ -600,13 +666,14 @@ def getMatchDetails(id, season, queue):
             winningTeam = "200"
         else:
             winningTeam = "100"
-        
-        print("\t\t\t\tspell1Id: " + spell1Id + "\n")
-        print("\t\t\t\tspell2Id: " + spell2Id + "\n")
-        print("\t\t\t\tparticipantId: " + participantId + "\n")
-        print("\t\t\t\tchampionId: " + championId + "\n")
-        print("\t\t\t\tteamId: " + teamId + "\n")
-        print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
+
+        if PRINT:
+            print("\t\t\t\tspell1Id: " + spell1Id + "\n")
+            print("\t\t\t\tspell2Id: " + spell2Id + "\n")
+            print("\t\t\t\tparticipantId: " + participantId + "\n")
+            print("\t\t\t\tchampionId: " + championId + "\n")
+            print("\t\t\t\tteamId: " + teamId + "\n")
+            print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
 
     insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue)
     
