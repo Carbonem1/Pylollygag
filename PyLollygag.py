@@ -97,6 +97,13 @@ def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
     connection.close()
     
 # -----Get Static Data-----
+def getAllStaticData():
+    getChampionList()
+    getItemList()
+    getMasteryList()
+    getRuneList()
+    getSummonerSpellList()
+    
 def getChampionList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=" + KEY
     
@@ -161,10 +168,48 @@ def getMasteryList():
         print("\t\tdescription: " + description + "\n")
     
 def getRuneList():
-    return
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune?api_key=" + KEY
+    
+    response = requests.get(URL)
+    if response.status_code != 200:
+        print("Couldn't get rune list. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+
+    print("Runes:\n")
+    for rune in response['data']:
+        id = str(response['data'][rune]['id'])
+        name = str(response['data'][rune]['name'])
+        description = str(response['data'][rune]['description'])
+
+        print("\t" + name + ":\n")
+        print("\t\tid: " + id + "\n")
+        print("\t\tname: " + name + "\n")
+        print("\t\tdescription: " + description + "\n")
     
 def getSummonerSpellList():
-    return
+    URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/summoner-spell?api_key=" + KEY
+    
+    response = requests.get(URL)
+    if response.status_code != 200:
+        print("Couldn't get summoner spell list. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+
+    print("Summoner Spells:\n")
+    for summonerSpell in response['data']:
+        id = str(response['data'][summonerSpell]['id'])
+        name = str(response['data'][summonerSpell]['name'])
+        description = str(response['data'][summonerSpell]['description'])
+        summonerLevel = str(response['data'][summonerSpell]['summonerLevel'])
+
+        print("\t" + name + ":\n")
+        print("\t\tid: " + id + "\n")
+        print("\t\tname: " + name + "\n")
+        print("\t\tdescription: " + description + "\n")
+        print("\t\tsummonerLevel: " + summonerLevel + "\n")
 
 # -----Get Summoner Data-----
 def getSummonerDetails(id):
@@ -569,11 +614,7 @@ def getMatchDetails(id, season, queue):
 
 
 def main():
-    '''
-    getChampionList()
-    getItemList()
-    getMasteryList()
-    '''
+    getAllStaticData()
     
     for i in range(950, 1050):
         getSummonerDetails(i)
