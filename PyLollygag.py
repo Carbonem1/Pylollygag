@@ -582,7 +582,7 @@ def getMatchDetails(id, season, queue):
         if 'creepsPerMinDeltas' in str(participant['timeline']):
             creepsPerMinDeltas = str(participant['timeline']['creepsPerMinDeltas'])
             if PRINT:
-                rint("\t\t\t\t\tcreepsPerMinDeltas:\n")
+                print("\t\t\t\t\tcreepsPerMinDeltas:\n")
             if 'zeroToTen' in str(participant['timeline']['creepsPerMinDeltas']):
                 creepsPerMinDeltasZeroToTen = str(participant['timeline']['creepsPerMinDeltas']['zeroToTen'])
                 if PRINT:
