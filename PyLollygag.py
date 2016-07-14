@@ -4,20 +4,20 @@ import time
 from Constants import *
 
 # -----Algorithms-----
-def algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
-    if role == "adc":
+def algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
+    if lane == "BOTTOM" and role == "DUO_CARRY":
         return adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
 
-    if role == "support":
-        return supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGam1e, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal)
+    if lane == "BOTTOM" and role == "DUO_SUPPORT":
+        return supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal)
 
-    if role == "mid":
+    if lane == "MIDDLE":
         return midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
 
-    if role == "top":
+    if lane == "TOP":
         return topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken)
 
-    if role == "jungle":
+    if lane == "JUNGLE":
         return jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)
 
 def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
@@ -26,7 +26,17 @@ def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     else:
         winScore = 0
 
-    killDeathAssistScore = (kills + 1/2 * assists) / deaths
+    # convert any strings to integers
+    kills = int(kills)
+    deaths = int(deaths)
+    assists = int(assists)
+    minionsKilled = int(minionsKilled)
+    totalDamageDealt = int(totalDamageDealt)
+
+    if deaths != 0:
+        killDeathAssistScore = (kills + (1/2 * assists)) / deaths
+    else:
+        killDeathAssistScore = (kills + (1/2 * assists)) + 1
     killDeathAssistScoreWeight = 3
     if killDeathAssistScore > 10:
         killDeathAssistScore = 10
@@ -48,19 +58,167 @@ def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     return score
 
 def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal):
-    score = 0
+    if winner:
+        winScore = 10
+    else:
+        winScore = 0
+
+    # convert any strings to integers
+    kills = int(kills)
+    deaths = int(deaths)
+    assists = int(assists)
+    visionWardsBoughtInGame = int(visionWardsBoughtInGame)
+    sightWardsBoughtInGame = int(sightWardsBoughtInGame)
+    wardsPlaced = int(wardsPlaced)
+    totalTimeCrowdControlDealt = int(totalTimeCrowdControlDealt)
+    totalHeal = int(totalHeal)
+
+    if deaths != 0:
+        killDeathAssistScore = ((1/2 * kills) + assists) / deaths
+    else:
+        killDeathAssistScore = ((1/2 * kills) + assists) + 1
+    killDeathAssistScoreWeight = 3
+    if killDeathAssistScore > 10:
+        killDeathAssistScore = 10
+    killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
+
+    visionWardsBoughtInGameScore = visionWardsBoughtInGame / 10
+    visionWardsBoughtInGameScoreWeight = 1
+    if visionWardsBoughtInGameScore > 10:
+        visionWardsBoughtInGameScore = 10
+    visionWardsBoughtInGameScore = visionWardsBoughtInGameScore * visionWardsBoughtInGameScoreWeight
+
+    sightWardsBoughtInGameScore = sightWardsBoughtInGame / 10
+    sightWardsBoughtInGameScoreWeight = 1
+    if sightWardsBoughtInGameScore > 10:
+        sightWardsBoughtInGameScore = 10
+    sightWardsBoughtInGameScore = sightWardsBoughtInGameScore * sightWardsBoughtInGameScoreWeight
+
+    wardsPlacedScore = wardsPlaced / 20
+    wardsPlacedScoreWeight = 1
+    if wardsPlacedScore > 10:
+        wardsPlacedScore = 10
+    wardsPlacedScore = wardsPlacedScore * wardsPlacedScoreWeight
+
+    totalTimeCrowdControlDealtScore = totalTimeCrowdControlDealt / 100
+    totalTimeCrowdControlDealtScoreWeight = 2
+    if totalTimeCrowdControlDealtScore > 10:
+        totalTimeCrowdControlDealtScore = 10
+    totalTimeCrowdControlDealtScore = totalTimeCrowdControlDealtScore * totalTimeCrowdControlDealtScoreWeight
+
+    totalHealScore = totalHeal / 100000
+    totalHealScoreWeight = 2
+    if totalHealScore > 10:
+        totalHealScore = 10
+    totalHealScore = totalHealScore * totalHealScoreWeight
+
+    score = killDeathAssistScore + visionWardsBoughtInGameScore + sightWardsBoughtInGameScore + wardsPlacedScore + totalTimeCrowdControlDealtScore + totalHealScore
     return score
 
 def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
-    score = 0
+    if winner:
+        winScore = 10
+    else:
+        winScore = 0
+
+    # convert any strings to integers
+    kills = int(kills)
+    deaths = int(deaths)
+    assists = int(assists)
+    minionsKilled = int(minionsKilled)
+    totalDamageDealt = int(totalDamageDealt)
+
+    if deaths != 0:
+        killDeathAssistScore = (kills + (1/2 * assists)) / deaths
+    else:
+        killDeathAssistScore = (kills + (1/2 * assists)) + 1
+    killDeathAssistScoreWeight = 3
+    if killDeathAssistScore > 10:
+        killDeathAssistScore = 10
+    killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
+
+    minionsKilledScore = minionsKilled / 60
+    minionsKilledScoreWeight = 5
+    if minionsKilledScore > 10:
+        minionsKilledScore = 10
+    minionsKilledScore = minionsKilledScore * minionsKilledScoreWeight
+
+    totalDamageDealtScore = totalDamageDealt / 20000
+    totalDamageDealtScoreWeight = 2
+    if totalDamageDealtScore > 10:
+        totalDamageDealtScore = 10
+    totalDamageDealtScore = totalDamageDealtScore * totalDamageDealtScoreWeight
+
+    score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
     return score
 
 def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken):
-    score = 0
+    if winner:
+        winScore = 10
+    else:
+        winScore = 0
+
+    # convert any strings to integers
+    kills = int(kills)
+    deaths = int(deaths)
+    assists = int(assists)
+    totalDamageDealt = int(totalDamageDealt)
+    totalDamageTaken = int(totalDamageTaken)
+
+    if deaths != 0:
+        killDeathAssistScore = (kills + (1/2 * assists)) / deaths
+    else:
+        killDeathAssistScore = (kills + (1/2 * assists)) + 1
+    killDeathAssistScoreWeight = 4
+    if killDeathAssistScore > 10:
+        killDeathAssistScore = 10
+    killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
+
+    totalDamageDealtScore = totalDamageDealt / 20000
+    totalDamageDealtScoreWeight = 3
+    if totalDamageDealtScore > 10:
+        totalDamageDealtScore = 10
+    totalDamageDealtScore = totalDamageDealtScore * totalDamageDealtScoreWeight
+
+    totalDamageTakenScore = totalDamageDealt / 20000
+    totalDamageTakenScoreWeight = 3
+    if totalDamageTakenScore > 10:
+        totalDamageTakenScore = 10
+    totalDamageTakenScore = totalDamageTakenScore * totalDamageTakenScoreWeight
+
+    score = killDeathAssistScore + totalDamageDealtScore + totalDamageTakenScore + winScore
     return score
 
 def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
-    score = 0
+    if winner:
+        winScore = 10
+    else:
+        winScore = 0
+
+    # convert any strings to integers
+    kills = int(kills)
+    deaths = int(deaths)
+    assists = int(assists)
+    neutralMinionsKilled = int(neutralMinionsKilled)
+    neutralMinionsKilledTeamJungle = int(neutralMinionsKilledTeamJungle)
+    neutralMinionsKilledEnemyJungle = int(neutralMinionsKilledEnemyJungle)
+
+    if deaths != 0:
+        killDeathAssistScore = (kills + (1/2 * assists)) / deaths
+    else:
+        killDeathAssistScore = (kills + (1/2 * assists)) + 1
+    killDeathAssistScoreWeight = 4
+    if killDeathAssistScore > 10:
+        killDeathAssistScore = 10
+    killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
+
+    neutralMinionsKilledScore = neutralMinionsKilled / 300
+    neutralMinionsKilledScoreWeight = 6
+    if neutralMinionsKilledScore > 10:
+        neutralMinionsKilledScore = 10
+    neutralMinionsKilledScore = neutralMinionsKilledScore * neutralMinionsKilledScoreWeight
+
+    score = killDeathAssistScore + neutralMinionsKilledScore + winScore
     return score
 
 # -----SQL inserts-----
@@ -169,7 +327,8 @@ def getItemList():
         print("Items:\n")
     for item in response['data']:
         id = str(response['data'][item]['id'])
-        name = str(response['data'][item]['name'])
+        if 'name' in str(response['data'][item]):
+            name = str(response['data'][item]['name'])
 
         if PRINT:
             print("\t" + name + ":\n")
@@ -678,11 +837,6 @@ def getMatchDetails(id, season, queue):
         teamId = str(participant['teamId'])
         highestAchievedSeasonTier = str(participant['highestAchievedSeasonTier'])
 
-        team1PlayerIds += participantId + "/"
-        team1PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
-        print(team1PerformanceIds)
-        team2PlayerIds += participantId + "/"
-        team2PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
         if winner == True:
             winningTeam = teamId
         elif teamId == "100":
@@ -698,10 +852,33 @@ def getMatchDetails(id, season, queue):
             print("\t\t\t\tteamId: " + teamId + "\n")
             print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
 
+        if PRINT:
+            print("\t\tParticipantIds:\n")
+        for player in response['participantIdentities']:
+            currentParticipantId = str(player['participantId'])
+            if currentParticipantId == participantId:
+                profileIcon = str(player['player']['profileIcon'])
+                matchHistoryUri = str(player['player']['matchHistoryUri'])
+                summonerName = str(player['player']['summonerName'])
+                summonerId = str(player['player']['summonerId'])
+
+                if int(teamId) == 100:
+                    team1PlayerIds += str(summonerId) + "/"
+                    team1PerformanceIds += str(algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+                elif int(teamId) == 200:
+                    team2PlayerIds += str(summonerId) + "/"
+                    team2PerformanceIds += str(algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+
+                if PRINT:
+                    print("\t\t\tparticipantId:" + participantId + "\n")
+                    print("\t\t\tsummonerName:" + summonerName + "\n")
+                    print("\t\t\tsummonerId:" + summonerId + "\n")
+                    print("\t\t\tprofileIcon:" + profileIcon + "\n")
+                    print("\t\t\tmatchHistoryUri:" + matchHistoryUri + "\n\n")
+
     insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue)
 
     time.sleep(1)
-
 
 def main():
     getAllStaticData()
