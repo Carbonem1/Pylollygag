@@ -7,6 +7,7 @@ CREATE table testdb.Player
 (
 	PlayerID int PRIMARY KEY DEFAULT 0,
 	PlayerName char(30) NULL, 
+	PlayerScore char(10) NULL, 
 )
 
 exec sp_columns Player
