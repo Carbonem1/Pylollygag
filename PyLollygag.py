@@ -9,7 +9,7 @@ def algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalD
         return adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
 
     if role == "support":
-        return supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal)
+        return supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGam1e, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal)
 
     if role == "mid":
         return midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
@@ -21,7 +21,30 @@ def algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalD
         return jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)
 
 def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
-    score = 0
+    if winner:
+        winScore = 10
+    else:
+        winScore = 0
+
+    killDeathAssistScore = (kills + 1/2 * assists) / deaths
+    killDeathAssistScoreWeight = 3
+    if killDeathAssistScore > 10:
+        killDeathAssistScore = 10
+    killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
+
+    minionsKilledScore = minionsKilled / 60
+    minionsKilledScoreWeight = 5
+    if minionsKilledScore > 10:
+        minionsKilledScore = 10
+    minionsKilledScore = minionsKilledScore * minionsKilledScoreWeight
+
+    totalDamageDealtScore = totalDamageDealt / 20000
+    totalDamageDealtScoreWeight = 2
+    if totalDamageDealtScore > 10:
+        totalDamageDealtScore = 10
+    totalDamageDealtScore = totalDamageDealtScore * totalDamageDealtScoreWeight
+
+    score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
     return score
 
 def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal):
@@ -42,7 +65,6 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
 
 # -----SQL inserts-----
 def insertSummonerRecord(id, name):
-    
     connection = pypyodbc.connect('Driver={' + DRIVER + '};'
                                 'Server=' + SERVER + ';'
                                 'Database=' + DATABASE + ';'
@@ -55,7 +77,7 @@ def insertSummonerRecord(id, name):
     cursor = connection.cursor()
     cursor.execute(SQLCommand, values)
     results = cursor.fetchone()
-    
+
     if str(results) == "None":
         if PRINT:
             print("inserting player " + id + "...")
@@ -65,16 +87,16 @@ def insertSummonerRecord(id, name):
         values = [id, name]
         cursor.execute(SQLCommand, values)
         connection.commit()
-        
+
     connection.close()
 
 def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
-    
+
     connection = pypyodbc.connect('Driver={' + DRIVER + '};'
                                 'Server=' + SERVER + ';'
                                 'Database=' + DATABASE + ';'
                                 'uid=' + UID + ';pwd=' + PWD)
-    
+
     if season == "SEASON2016":
         cursor = connection.cursor()
         SQLCommand = ("SELECT * "
@@ -84,7 +106,7 @@ def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         cursor = connection.cursor()
         cursor.execute(SQLCommand, values)
         results = cursor.fetchone()
-    
+
         if str(results) == "None":
             if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
                 if PRINT:
@@ -95,9 +117,9 @@ def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 values = [id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
                 cursor.execute(SQLCommand, values)
                 connection.commit()
-        
+
     connection.close()
-    
+
 # -----Get Static Data-----
 def getAllStaticData():
     getChampionList()
@@ -105,10 +127,10 @@ def getAllStaticData():
     getMasteryList()
     getRuneList()
     getSummonerSpellList()
-    
+
 def getChampionList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=" + KEY
-    
+
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -131,10 +153,10 @@ def getChampionList():
             print("\t\ttitle: " + title + "\n")
             print("\t\tname: " + name + "\n")
             print("\t\tkey: " + key + "\n")
-    
+
 def getItemList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=" + KEY
-    
+
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -153,10 +175,10 @@ def getItemList():
             print("\t" + name + ":\n")
             print("\t\tid: " + id + "\n")
             print("\t\tname: " + name + "\n")
-    
+
 def getMasteryList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=" + KEY
-    
+
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -177,10 +199,10 @@ def getMasteryList():
             print("\t\tid: " + id + "\n")
             print("\t\tname: " + name + "\n")
             print("\t\tdescription: " + description + "\n")
-        
+
 def getRuneList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune?api_key=" + KEY
-    
+
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -201,10 +223,10 @@ def getRuneList():
             print("\t\tid: " + id + "\n")
             print("\t\tname: " + name + "\n")
             print("\t\tdescription: " + description + "\n")
-    
+
 def getSummonerSpellList():
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/summoner-spell?api_key=" + KEY
-    
+
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -658,6 +680,7 @@ def getMatchDetails(id, season, queue):
 
         team1PlayerIds += participantId + "/"
         team1PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+        print(team1PerformanceIds)
         team2PlayerIds += participantId + "/"
         team2PerformanceIds += str(algorithmHandler(role, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
         if winner == True:
@@ -676,17 +699,17 @@ def getMatchDetails(id, season, queue):
             print("\t\t\t\thighestAchievedSeasonTier: " + highestAchievedSeasonTier + "\n")
 
     insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue)
-    
+
     time.sleep(1)
 
 
 def main():
     getAllStaticData()
-    
+
     for i in range(950, 1050):
         getSummonerDetails(i)
         getSummonerMatches(i)
-    
+
 
 
 if __name__ == "__main__":
