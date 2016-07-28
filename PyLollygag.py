@@ -266,7 +266,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2016 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -278,7 +278,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2015 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -290,7 +290,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2014 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -302,7 +302,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2013 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -314,7 +314,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2012 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -326,7 +326,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2011 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
@@ -338,7 +338,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             SQLCommand = ("INSERT INTO Season2010 "
                         "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                         "VALUES (%s, %s, %s, %s, %s, %s)"
-                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID)
             dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
