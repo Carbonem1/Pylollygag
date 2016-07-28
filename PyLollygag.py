@@ -226,14 +226,15 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
 # -----SQL inserts-----
 def insertSummonerRecord(ID, name, score):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
+
     cursor = connection.cursor(buffered = True)
     query = ("SELECT PlayerID FROM Players WHERE PlayerID = " + ID)
     result = cursor.execute(query)
 
     if str(result) == "None":
         addPlayer = ("INSERT INTO Players "
-               "(ID, name, score)"
-               "VALUES (%d, %f, %f)")
+               "(PlayerID, Name, AverageScore)"
+               "VALUES (%s, %s, %s)")
         dataPlayer = (ID, name, score)
         cursor.execute(addPlayer)
         connection.commit()
@@ -241,34 +242,138 @@ def insertSummonerRecord(ID, name, score):
     cursor.close()
     connection.close()
 
-def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
+def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
 
-    connection = pypyodbc.connect('Driver={' + DRIVER + '};'
-                                'Server=' + SERVER + ';'
-                                'Database=' + DATABASE + ';'
-                                'uid=' + UID + ';pwd=' + PWD)
+    connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
+
+    cursor = connection.cursor(buffered = True)
+    query = ("SELECT MatchID FROM AllSeasons WHERE MatchID = " + ID)
+    result = cursor.execute(query)
+
+    if str(result) == "None":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO AllSeasons "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)")
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
     if season == "SEASON2016":
-        cursor = connection.cursor()
-        SQLCommand = ("SELECT * "
-                      "FROM Season2016 "
-                      "WHERE MatchID = ?")
-        values = [id]
-        cursor = connection.cursor()
-        cursor.execute(SQLCommand, values)
-        results = cursor.fetchone()
+        cursor = connection.cursor(buffered = True)
+        query = ("SELECT MatchID FROM Season2016 WHERE MatchID = " + ID)
+        result = cursor.execute(query)
 
-        if str(results) == "None":
+        if str(result) == "None":
             if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
                 if PRINT:
-                    print("inserting match " + id + "...")
+                    print("inserting match " + str(ID) + "...")
                 SQLCommand = ("INSERT INTO Season2016 "
                             "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                            "VALUES (?, ?, ?, ?, ?, ?)")
-                values = [id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                cursor.execute(SQLCommand, values)
+                            "VALUES (%s, %s, %s, %s, %s, %s)")
+                dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                cursor.execute(SQLCommand, dataMatch)
                 connection.commit()
 
+    if season == "SEASON2015":
+        cursor = connection.cursor(buffered = True)
+        query = ("SELECT MatchID FROM Season2015 WHERE MatchID = " + ID)
+        result = cursor.execute(query)
+
+        if str(result) == "None":
+            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                if PRINT:
+                    print("inserting match " + str(ID) + "...")
+                SQLCommand = ("INSERT INTO Season2015 "
+                            "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                            "VALUES (%s, %s, %s, %s, %s, %s)")
+                dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                cursor.execute(SQLCommand, dataMatch)
+                connection.commit()
+
+        if season == "SEASON2014":
+            cursor = connection.cursor(buffered = True)
+            query = ("SELECT MatchID FROM Season2014 WHERE MatchID = " + ID)
+            result = cursor.execute(query)
+
+            if str(result) == "None":
+                if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                    if PRINT:
+                        print("inserting match " + str(ID) + "...")
+                    SQLCommand = ("INSERT INTO Season2014 "
+                                "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                                "VALUES (%s, %s, %s, %s, %s, %s)")
+                    dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                    cursor.execute(SQLCommand, dataMatch)
+                    connection.commit()
+
+            if season == "SEASON2013":
+                cursor = connection.cursor(buffered = True)
+                query = ("SELECT MatchID FROM Season2013 WHERE MatchID = " + ID)
+                result = cursor.execute(query)
+
+                if str(result) == "None":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                        if PRINT:
+                            print("inserting match " + str(ID) + "...")
+                        SQLCommand = ("INSERT INTO Season2013 "
+                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                                    "VALUES (%s, %s, %s, %s, %s, %s)")
+                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                        cursor.execute(SQLCommand, dataMatch)
+                        connection.commit()
+
+            if season == "SEASON2012":
+                cursor = connection.cursor(buffered = True)
+                query = ("SELECT MatchID FROM Season2012 WHERE MatchID = " + ID)
+                result = cursor.execute(query)
+
+                if str(result) == "None":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                        if PRINT:
+                            print("inserting match " + str(ID) + "...")
+                        SQLCommand = ("INSERT INTO Season2012 "
+                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                                    "VALUES (%s, %s, %s, %s, %s, %s)")
+                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                        cursor.execute(SQLCommand, dataMatch)
+                        connection.commit()
+
+            if season == "SEASON2011":
+                cursor = connection.cursor(buffered = True)
+                query = ("SELECT MatchID FROM Season2011 WHERE MatchID = " + ID)
+                result = cursor.execute(query)
+
+                if str(result) == "None":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                        if PRINT:
+                            print("inserting match " + str(ID) + "...")
+                        SQLCommand = ("INSERT INTO Season2011 "
+                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                                    "VALUES (%s, %s, %s, %s, %s, %s)")
+                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                        cursor.execute(SQLCommand, dataMatch)
+                        connection.commit()
+
+            if season == "SEASON2010":
+                cursor = connection.cursor(buffered = True)
+                query = ("SELECT MatchID FROM Season2010 WHERE MatchID = " + ID)
+                result = cursor.execute(query)
+
+                if str(result) == "None":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                        if PRINT:
+                            print("inserting match " + str(ID) + "...")
+                        SQLCommand = ("INSERT INTO Season2010 "
+                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                                    "VALUES (%s, %s, %s, %s, %s, %s)")
+                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+                        cursor.execute(SQLCommand, dataMatch)
+                        connection.commit()
+
+    cursor.close()
     connection.close()
 
 # -----Get Static Data-----
@@ -917,14 +1022,19 @@ def getMatchDetails(playerId, id, season, queue):
 
 def main():
     #getAllStaticData()
-    #name = "adrian"
-    #summonerDetails = getSummonerDetailsByName(name)
+    names = ["adrian", "altec", "aphromoo", "apollo", "azingy", "benny", "big", "billyboss", "biofrost", "bjergsen", "bunnyfufuu", "cris", "crumbzz", "dardoch", "darshan",
+    "doublelift", "feng", "fenix", "freeze", "froggen", "gbm", "gate", "hai", "hard", "hauntzer", "heartbeat", "helios", "hi im gosu", "hotshotgg", "huhi", "huni", "impact",
+    "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy",
+    "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle",
+    "xmithie", "yazuki", "yellowstar", "youngbin"]
 
-    id = 0
-    name = 'test'
-    score = 0
+    for name in names:
+        summonerDetails = getSummonerDetailsByName(name)
+        ID = summonerDetails[0]
+        name = summonerDetails[1]
+        score = getSummonerMatches(ID)
 
-    insertSummonerRecord(id, name, score)
+        insertSummonerRecord(ID, name, score)
 
 if __name__ == "__main__":
     main()
