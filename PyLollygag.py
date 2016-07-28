@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import mysql.connector
 import requests
 import pypyodbc
 import time
@@ -908,12 +909,12 @@ def getMatchDetails(playerId, id, season, queue):
 
 def main():
     #getAllStaticData()
-    name = "adrian"
-    summonerDetails = getSummonerDetailsByName(name)
+    #name = "adrian"
+    #summonerDetails = getSummonerDetailsByName(name)
 
-    id = summonerDetails[0]
-    name = summonerDetails[1]
-    score = getSummonerMatches(id)
+    id = 0
+    name = 'test'
+    score = 0
 
     insertSummonerRecord(id, name, score)
 
