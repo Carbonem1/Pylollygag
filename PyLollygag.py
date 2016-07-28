@@ -3,6 +3,9 @@ import mysql.connector
 import requests
 import pypyodbc
 import time
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 from Constants import *
 
 # -----Algorithms-----
@@ -236,7 +239,7 @@ def insertSummonerRecord(ID, name, score):
                "(PlayerID, Name, AverageScore)"
                "VALUES (%s, %s, %s)")
         dataPlayer = (ID, name, score)
-        cursor.execute(addPlayer)
+        cursor.execute(addPlayer, dataPlayer)
         connection.commit()
 
     cursor.close()
