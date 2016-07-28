@@ -231,7 +231,7 @@ def insertSummonerRecord(ID, name, score):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
-    query = ("SELECT PlayerID FROM Players
+    query = ("SELECT PlayerID FROM Players"
              "WHERE PlayerID = %s")
     result = cursor.execute(query, ID)
 
@@ -263,7 +263,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
     if season == "SEASON2016":
         cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2016
+        query = ("SELECT MatchID FROM Season2016"
                  "WHERE MatchID = %s")
         result = cursor.execute(query, ID)
 
@@ -282,7 +282,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
     if season == "SEASON2015":
         cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2015
+        query = ("SELECT MatchID FROM Season2015"
                  "WHERE MatchID = %s")
         result = cursor.execute(query, ID)
 
@@ -299,7 +299,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
         if season == "SEASON2014":
             cursor = connection.cursor(buffered = True)
-            query = ("SELECT MatchID FROM Season2014
+            query = ("SELECT MatchID FROM Season2014"
                      "WHERE MatchID = %s")
             result = cursor.execute(query, ID)
 
@@ -316,7 +316,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2013":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2013
+                query = ("SELECT MatchID FROM Season2013"
                          "WHERE MatchID = %s")
                 result = cursor.execute(query, ID)
 
@@ -333,7 +333,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2012":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2012
+                query = ("SELECT MatchID FROM Season2012"
                          "WHERE MatchID = %s")
                 result = cursor.execute(query, ID)
 
@@ -350,7 +350,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2011":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2011
+                query = ("SELECT MatchID FROM Season2011"
                          "WHERE MatchID = %s"D)
                 result = cursor.execute(query, ID)
 
@@ -367,7 +367,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2010":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2010
+                query = ("SELECT MatchID FROM Season2010"
                          "WHERE MatchID = %s")
                 result = cursor.execute(query, ID)
 
