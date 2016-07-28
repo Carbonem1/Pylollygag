@@ -231,17 +231,14 @@ def insertSummonerRecord(ID, name, score):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
-    query = ("SELECT PlayerID FROM Players"
-             "WHERE PlayerID = %s")
-    result = cursor.execute(query, ID)
 
-    if str(result) == "None":
-        addPlayer = ("INSERT INTO Players "
-               "(PlayerID, Name, AverageScore)"
-               "VALUES (%s, %s, %s)")
-        dataPlayer = (ID, name, score)
-        cursor.execute(addPlayer, dataPlayer)
-        connection.commit()
+    addPlayer = ("INSERT INTO Players "
+           "(PlayerID, Name, AverageScore)"
+           "VALUES (%s, %s, %s)"
+           "ON DUPLICATE KEY UPDATE PlayerID " + ID + ", Name = " + name + ", AverageScore = " + score)
+    dataPlayer = (ID, name, score)
+    cursor.execute(addPlayer, dataPlayer)
+    connection.commit()
 
     cursor.close()
     connection.close()
@@ -249,6 +246,7 @@ def insertSummonerRecord(ID, name, score):
 def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
 
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
+    cursor = connection.cursor(buffered = True)
 
     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
         if PRINT:
@@ -256,131 +254,94 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         SQLCommand = ("INSERT INTO AllSeasons "
                     "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
                     "VALUES (%s, %s, %s, %s, %s, %s)"
-                    "ON DUPLICATE KEY UPDATE MatchID = " + MatchID)
+                    "ON DUPLICATE KEY UPDATE MatchID = " + ID)
         dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
         cursor.execute(SQLCommand, dataMatch)
         connection.commit()
 
     if season == "SEASON2016":
-        cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2016"
-                 "WHERE MatchID = %s")
-        result = cursor.execute(query, ID)
-
-        if str(result) == "None":
-            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                if PRINT:
-                    print("inserting match " + str(ID) + "...")
-                SQLCommand = ("INSERT INTO Season2016 "
-                            "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                            "VALUES (%s, %s, %s, %s, %s, %s)")
-                dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                cursor.execute(SQLCommand, dataMatch)
-                connection.commit()
-        else:
-            print("Match already exists in database.")
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2016 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
     if season == "SEASON2015":
-        cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2015"
-                 "WHERE MatchID = %s")
-        result = cursor.execute(query, ID)
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2015 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
-        if str(result) == "None":
-            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                if PRINT:
-                    print("inserting match " + str(ID) + "...")
-                SQLCommand = ("INSERT INTO Season2015 "
-                            "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                            "VALUES (%s, %s, %s, %s, %s, %s)")
-                dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                cursor.execute(SQLCommand, dataMatch)
-                connection.commit()
+    if season == "SEASON2014":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2014 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
-        if season == "SEASON2014":
-            cursor = connection.cursor(buffered = True)
-            query = ("SELECT MatchID FROM Season2014"
-                     "WHERE MatchID = %s")
-            result = cursor.execute(query, ID)
+    if season == "SEASON2013":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2013 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
-            if str(result) == "None":
-                if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                    if PRINT:
-                        print("inserting match " + str(ID) + "...")
-                    SQLCommand = ("INSERT INTO Season2014 "
-                                "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                                "VALUES (%s, %s, %s, %s, %s, %s)")
-                    dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                    cursor.execute(SQLCommand, dataMatch)
-                    connection.commit()
+    if season == "SEASON2012":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2012 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
-            if season == "SEASON2013":
-                cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2013"
-                         "WHERE MatchID = %s")
-                result = cursor.execute(query, ID)
+    if season == "SEASON2011":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2011 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
-                if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                        if PRINT:
-                            print("inserting match " + str(ID) + "...")
-                        SQLCommand = ("INSERT INTO Season2013 "
-                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                                    "VALUES (%s, %s, %s, %s, %s, %s)")
-                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                        cursor.execute(SQLCommand, dataMatch)
-                        connection.commit()
-
-            if season == "SEASON2012":
-                cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2012"
-                         "WHERE MatchID = %s")
-                result = cursor.execute(query, ID)
-
-                if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                        if PRINT:
-                            print("inserting match " + str(ID) + "...")
-                        SQLCommand = ("INSERT INTO Season2012 "
-                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                                    "VALUES (%s, %s, %s, %s, %s, %s)")
-                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                        cursor.execute(SQLCommand, dataMatch)
-                        connection.commit()
-
-            if season == "SEASON2011":
-                cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2011"
-                         "WHERE MatchID = %s")
-                result = cursor.execute(query, ID)
-
-                if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                        if PRINT:
-                            print("inserting match " + str(ID) + "...")
-                        SQLCommand = ("INSERT INTO Season2011 "
-                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                                    "VALUES (%s, %s, %s, %s, %s, %s)")
-                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                        cursor.execute(SQLCommand, dataMatch)
-                        connection.commit()
-
-            if season == "SEASON2010":
-                cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2010"
-                         "WHERE MatchID = %s")
-                result = cursor.execute(query, ID)
-
-                if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-                        if PRINT:
-                            print("inserting match " + str(ID) + "...")
-                        SQLCommand = ("INSERT INTO Season2010 "
-                                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                                    "VALUES (%s, %s, %s, %s, %s, %s)")
-                        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-                        cursor.execute(SQLCommand, dataMatch)
-                        connection.commit()
+    if season == "SEASON2010":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+            if PRINT:
+                print("inserting match " + str(ID) + "...")
+            SQLCommand = ("INSERT INTO Season2010 "
+                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)"
+                        "ON DUPLICATE KEY UPDATE MatchID = " + ID))
+            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+            cursor.execute(SQLCommand, dataMatch)
+            connection.commit()
 
     cursor.close()
     connection.close()
