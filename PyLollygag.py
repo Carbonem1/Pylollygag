@@ -250,21 +250,16 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
-    cursor = connection.cursor(buffered = True)
-    query = ("SELECT MatchID FROM AllSeasons "
-             "WHERE MatchID = %s")
-    result = cursor.execute(query, ID)
-
-    if str(result) == "None":
-        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
-            if PRINT:
-                print("inserting match " + str(ID) + "...")
-            SQLCommand = ("INSERT INTO AllSeasons "
-                        "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
-                        "VALUES (%s, %s, %s, %s, %s, %s)")
-            dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
-            cursor.execute(SQLCommand, dataMatch)
-            connection.commit()
+    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
+        if PRINT:
+            print("inserting match " + str(ID) + "...")
+        SQLCommand = ("INSERT INTO AllSeasons "
+                    "(MatchID, Team1PlayerIDs, Team1PerformanceIDs, Team2PlayerIDs, Team2PerformanceIDs, WinningTeam) "
+                    "VALUES (%s, %s, %s, %s, %s, %s)"
+                    "ON DUPLICATE KEY UPDATE MatchID = " + MatchID)
+        dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
+        cursor.execute(SQLCommand, dataMatch)
+        connection.commit()
 
     if season == "SEASON2016":
         cursor = connection.cursor(buffered = True)
