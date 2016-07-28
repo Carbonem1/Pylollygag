@@ -435,6 +435,31 @@ def getSummonerDetails(id, score):
 
     time.sleep(1)
 
+# -----Get Summoner Data-----
+def getSummonerDetailsByName(summonerName):
+    summonerName = str(summonerName)
+    URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/" + summonerName + "?api_key=" + KEY
+
+    response = requests.get(URL)
+    if response.status_code != 200:
+        if PRINT:
+            print("Couldn't get player details by name. \nError, bad status code: ." + str(response.status_code))
+        return
+
+    response = response.json()
+    ID = str(response[summonerName]['id'])
+    name = str(response[summonerName]['name'])
+    profileIconId = response[summonerName]['profileIconId']
+    revisionDate = response[summonerName]['revisionDate']
+
+    if PRINT:
+        print("ID: " + ID)
+        print("Name: " + name)
+
+    time.sleep(1)
+
+    return ID, name
+
 # -----Get Basic Match Data-----
 def getSummonerMatches(id):
     summonerScore = 0
@@ -899,10 +924,15 @@ def getMatchDetails(playerId, id, season, queue):
 
 def main():
     #getAllStaticData()
+    name = "adrian"
+    summonerDetails = getSummonerDetailsByName(name)
+    print(summonerDetails)
 
-    for i in range(2006, 2050):
-        score = getSummonerMatches(i)
-        getSummonerDetails(i, score)
+    id = summonerDetails[0]
+    name = summonerDetails[1]
+    score = getSummonerMatches(id)
+
+    insertSummonerRecord(id, name, score)
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ CREATE schema draft1
 go
 
 -- create table
-CREATE table testdb.Player
+CREATE table Player
 (
 	PlayerID int PRIMARY KEY DEFAULT 0,
 	PlayerName char(30) NULL, 
