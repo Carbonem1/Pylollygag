@@ -226,11 +226,19 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
 # -----SQL inserts-----
 def insertSummonerRecord(ID, name, score):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered = True)
     query = ("SELECT PlayerID FROM Players WHERE PlayerID = " + ID)
-    cursor.execute(query)
-    cursor.close()
+    result = cursor.execute(query)
 
+    if str(result) == "None":
+        addPlayer = ("INSERT INTO Players "
+               "(ID, name, score)"
+               "VALUES (%d, %f, %f)")
+        dataPlayer = (ID, name, score)
+        cursor.execute(addPlayer)
+        connection.commit()
+
+    cursor.close()
     connection.close()
 
 def insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
