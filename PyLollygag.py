@@ -223,29 +223,12 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
     return round(score, 4)
 
 # -----SQL inserts-----
-def insertSummonerRecord(id, name, score):
-    connection = pypyodbc.connect('Driver={' + DRIVER + '};'
-                                'Server=' + SERVER + ';'
-                                'Database=' + DATABASE + ';'
-                                'uid=' + UID + ';pwd=' + PWD)
+def insertSummonerRecord(ID, name, score):
+    connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
     cursor = connection.cursor()
-    SQLCommand = ("SELECT * "
-                  "FROM Player "
-                  "WHERE PlayerID = ?")
-    values = [id]
-    cursor = connection.cursor()
-    cursor.execute(SQLCommand, values)
-    results = cursor.fetchone()
-
-    if str(results) == "None":
-        if PRINT:
-            print("inserting player " + id + "...")
-        SQLCommand = ("INSERT INTO Player "
-                     "(PlayerID, PlayerName, PlayerScore) "
-                     "VALUES (?,?,?)")
-        values = [id, name, score]
-        cursor.execute(SQLCommand, values)
-        connection.commit()
+    query = ("SELECT PlayerID FROM Players WHERE PlayerID = " + ID)
+    cursor.execute(query)
+    cursor.close()
 
     connection.close()
 
