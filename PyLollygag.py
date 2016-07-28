@@ -251,7 +251,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
     result = cursor.execute(query)
 
     if str(result) == "None":
-        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+        if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
             if PRINT:
                 print("inserting match " + str(ID) + "...")
             SQLCommand = ("INSERT INTO AllSeasons "
@@ -267,7 +267,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         result = cursor.execute(query)
 
         if str(result) == "None":
-            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                 if PRINT:
                     print("inserting match " + str(ID) + "...")
                 SQLCommand = ("INSERT INTO Season2016 "
@@ -283,7 +283,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         result = cursor.execute(query)
 
         if str(result) == "None":
-            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+            if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                 if PRINT:
                     print("inserting match " + str(ID) + "...")
                 SQLCommand = ("INSERT INTO Season2015 "
@@ -299,7 +299,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             result = cursor.execute(query)
 
             if str(result) == "None":
-                if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                     if PRINT:
                         print("inserting match " + str(ID) + "...")
                     SQLCommand = ("INSERT INTO Season2014 "
@@ -315,7 +315,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 result = cursor.execute(query)
 
                 if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                         if PRINT:
                             print("inserting match " + str(ID) + "...")
                         SQLCommand = ("INSERT INTO Season2013 "
@@ -331,7 +331,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 result = cursor.execute(query)
 
                 if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                         if PRINT:
                             print("inserting match " + str(ID) + "...")
                         SQLCommand = ("INSERT INTO Season2012 "
@@ -347,7 +347,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 result = cursor.execute(query)
 
                 if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                         if PRINT:
                             print("inserting match " + str(ID) + "...")
                         SQLCommand = ("INSERT INTO Season2011 "
@@ -363,7 +363,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 result = cursor.execute(query)
 
                 if str(result) == "None":
-                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "":
+                    if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
                         if PRINT:
                             print("inserting match " + str(ID) + "...")
                         SQLCommand = ("INSERT INTO Season2010 "
