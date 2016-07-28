@@ -351,7 +351,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             if season == "SEASON2011":
                 cursor = connection.cursor(buffered = True)
                 query = ("SELECT MatchID FROM Season2011"
-                         "WHERE MatchID = %s"D)
+                         "WHERE MatchID = %s")
                 result = cursor.execute(query, ID)
 
                 if str(result) == "None":
