@@ -231,8 +231,9 @@ def insertSummonerRecord(ID, name, score):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
-    query = ("SELECT PlayerID FROM Players WHERE PlayerID = " + ID)
-    result = cursor.execute(query)
+    query = ("SELECT PlayerID FROM Players
+             "WHERE PlayerID = %s")
+    result = cursor.execute(query, ID)
 
     if str(result) == "None":
         addPlayer = ("INSERT INTO Players "
@@ -250,8 +251,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
-    query = ("SELECT MatchID FROM AllSeasons WHERE MatchID = " + ID)
-    result = cursor.execute(query)
+    query = ("SELECT MatchID FROM AllSeasons "
+             "WHERE MatchID = %s")
+    result = cursor.execute(query, ID)
 
     if str(result) == "None":
         if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -266,8 +268,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
     if season == "SEASON2016":
         cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2016 WHERE MatchID = " + ID)
-        result = cursor.execute(query)
+        query = ("SELECT MatchID FROM Season2016
+                 "WHERE MatchID = %s")
+        result = cursor.execute(query, ID)
 
         if str(result) == "None":
             if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -279,11 +282,14 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
                 dataMatch = [ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam]
                 cursor.execute(SQLCommand, dataMatch)
                 connection.commit()
+        else:
+            print("Match already exists in database.")
 
     if season == "SEASON2015":
         cursor = connection.cursor(buffered = True)
-        query = ("SELECT MatchID FROM Season2015 WHERE MatchID = " + ID)
-        result = cursor.execute(query)
+        query = ("SELECT MatchID FROM Season2015
+                 "WHERE MatchID = %s")
+        result = cursor.execute(query, ID)
 
         if str(result) == "None":
             if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -298,8 +304,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
         if season == "SEASON2014":
             cursor = connection.cursor(buffered = True)
-            query = ("SELECT MatchID FROM Season2014 WHERE MatchID = " + ID)
-            result = cursor.execute(query)
+            query = ("SELECT MatchID FROM Season2014
+                     "WHERE MatchID = %s")
+            result = cursor.execute(query, ID)
 
             if str(result) == "None":
                 if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -314,8 +321,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2013":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2013 WHERE MatchID = " + ID)
-                result = cursor.execute(query)
+                query = ("SELECT MatchID FROM Season2013
+                         "WHERE MatchID = %s")
+                result = cursor.execute(query, ID)
 
                 if str(result) == "None":
                     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -330,8 +338,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2012":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2012 WHERE MatchID = " + ID)
-                result = cursor.execute(query)
+                query = ("SELECT MatchID FROM Season2012
+                         "WHERE MatchID = %s")
+                result = cursor.execute(query, ID)
 
                 if str(result) == "None":
                     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -346,8 +355,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2011":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2011 WHERE MatchID = " + ID)
-                result = cursor.execute(query)
+                query = ("SELECT MatchID FROM Season2011
+                         "WHERE MatchID = %s"D)
+                result = cursor.execute(query, ID)
 
                 if str(result) == "None":
                     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
@@ -362,8 +372,9 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
 
             if season == "SEASON2010":
                 cursor = connection.cursor(buffered = True)
-                query = ("SELECT MatchID FROM Season2010 WHERE MatchID = " + ID)
-                result = cursor.execute(query)
+                query = ("SELECT MatchID FROM Season2010
+                         "WHERE MatchID = %s")
+                result = cursor.execute(query, ID)
 
                 if str(result) == "None":
                     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
