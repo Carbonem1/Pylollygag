@@ -926,7 +926,6 @@ def main():
     #getAllStaticData()
     name = "adrian"
     summonerDetails = getSummonerDetailsByName(name)
-    print(summonerDetails)
 
     id = summonerDetails[0]
     name = summonerDetails[1]
