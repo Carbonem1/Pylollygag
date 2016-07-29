@@ -235,8 +235,8 @@ def insertSummonerRecord(ID, name, score):
     addPlayer = ("INSERT INTO Players "
            "(PlayerID, Name, AverageScore)"
            "VALUES (%s, %s, %s)"
-           "ON DUPLICATE KEY UPDATE PlayerID " + ID + ", Name = " + name + ", AverageScore = " + score)
-    dataPlayer = (ID, name, score)
+           "ON DUPLICATE KEY UPDATE AverageScore = %s")
+    dataPlayer = (ID, name, score, score)
     cursor.execute(addPlayer, dataPlayer)
     connection.commit()
 
@@ -680,7 +680,7 @@ def getMatchDetails(playerId, id, season, queue):
         physicalDamageDealt = str(participant['stats']['physicalDamageDealt'])
         tripleKills = str(participant['stats']['tripleKills'])
         deaths = str(participant['stats']['deaths'])
-        firstBloodAssist = str(participant['stats']['firstBloodAssist'])
+        #firstBloodAssist = str(participant['stats']['firstBloodAssist'])
         magicDamageDealtToChampions = str(participant['stats']['magicDamageDealtToChampions'])
         assists = str(participant['stats']['assists'])
         visionWardsBoughtInGame = str(participant['stats']['visionWardsBoughtInGame'])
@@ -698,23 +698,23 @@ def getMatchDetails(playerId, id, season, queue):
         totalDamageDealtToChampions = str(participant['stats']['totalDamageDealtToChampions'])
         goldEarned = str(participant['stats']['goldEarned'])
         neutralMinionsKilledTeamJungle = str(participant['stats']['neutralMinionsKilledTeamJungle'])
-        firstBloodKill = str(participant['stats']['firstBloodKill'])
-        firstTowerKill = str(participant['stats']['firstTowerKill'])
+        #firstBloodKill = str(participant['stats']['firstBloodKill'])
+        #firstTowerKill = str(participant['stats']['firstTowerKill'])
         wardsPlaced = str(participant['stats']['wardsPlaced'])
         trueDamageDealtToChampions = str(participant['stats']['trueDamageDealtToChampions'])
         killingSprees = str(participant['stats']['killingSprees'])
-        firstInhibitorKill = str(participant['stats']['firstInhibitorKill'])
+        #firstInhibitorKill = str(participant['stats']['firstInhibitorKill'])
         totalScoreRank = str(participant['stats']['totalScoreRank'])
         totalUnitsHealed = str(participant['stats']['totalUnitsHealed'])
         kills = str(participant['stats']['kills'])
-        firstInhibitorAssist = str(participant['stats']['firstInhibitorAssist'])
+        #firstInhibitorAssist = str(participant['stats']['firstInhibitorAssist'])
         totalPlayerScore = str(participant['stats']['totalPlayerScore'])
         neutralMinionsKilledEnemyJungle = str(participant['stats']['neutralMinionsKilledEnemyJungle'])
         magicDamageTaken = str(participant['stats']['magicDamageTaken'])
         largestMultiKill = str(participant['stats']['largestMultiKill'])
         totalHeal = str(participant['stats']['totalHeal'])
         objectivePlayerScore = str(participant['stats']['objectivePlayerScore'])
-        firstTowerAssist = str(participant['stats']['firstTowerAssist'])
+        #firstTowerAssist = str(participant['stats']['firstTowerAssist'])
         trueDamageTaken = str(participant['stats']['trueDamageTaken'])
         neutralMinionsKilled = str(participant['stats']['neutralMinionsKilled'])
         combatPlayerScore = str(participant['stats']['combatPlayerScore'])
@@ -992,11 +992,8 @@ def getMatchDetails(playerId, id, season, queue):
 
 def main():
     #getAllStaticData()
-    names = ["adrian", "altec", "aphromoo", "apollo", "azingy", "benny", "big", "billyboss", "biofrost", "bjergsen", "bunnyfufuu", "cris", "crumbzz", "dardoch", "darshan",
-    "doublelift", "feng", "fenix", "freeze", "froggen", "gbm", "gate", "hai", "hard", "hauntzer", "heartbeat", "helios", "hi im gosu", "hotshotgg", "huhi", "huni", "impact",
-    "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy",
-    "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle",
-    "xmithie", "yazuki", "yellowstar", "youngbin"]
+    #names = ["huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
+    names = ["konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
 
     for name in names:
         summonerDetails = getSummonerDetailsByName(name)
