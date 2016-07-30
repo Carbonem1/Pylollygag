@@ -1023,8 +1023,8 @@ def getMatchDetails(playerId, id, season, queue):
 
 def main():
     #getAllStaticData()
-    #names = ["huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
-    names = ["recklessmike"]
+    #names = ["adrian", "alexich", "altec", "aphromoo", "apollo", "balls", "beibei", "big", "billyboss", "bjergsen", "bunny fufuu", "cris", "crumbz", "dardoch", "darshan", "doublelift", "feng", "fenix", "flarsz", "freeze", "froggen", "gate", "gbm", "goldenglue", "grigne", "hai", "hakuho", "hard", "hauntzer", "huhi", "huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
+    names = ["adrian", "alexich", "altec", "aphromoo", "apollo", "balls", "beibei", "big", "billyboss", "bjergsen", "bunny fufuu", "cris", "crumbz", "dardoch", "darshan", "doublelift", "feng", "fenix", "flarsz", "freeze", "froggen", "gate", "gbm", "goldenglue", "grigne", "hai", "hakuho", "hard", "hauntzer", "huhi", "huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
 
     for name in names:
         summonerDetails = getSummonerDetailsByName(name)
