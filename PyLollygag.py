@@ -60,7 +60,7 @@ def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     totalDamageDealtScore = totalDamageDealtScore * totalDamageDealtScoreWeight
 
     score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
-    return round(score, 4)
+    return (round(score, 4), 1)
 
 def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal):
     if winner:
@@ -118,7 +118,7 @@ def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, si
     totalHealScore = totalHealScore * totalHealScoreWeight
 
     score = killDeathAssistScore + visionWardsBoughtInGameScore + sightWardsBoughtInGameScore + wardsPlacedScore + totalTimeCrowdControlDealtScore + totalHealScore
-    return round(score, 4)
+    return (round(score, 4), 2)
 
 def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
     if winner:
@@ -155,7 +155,7 @@ def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     totalDamageDealtScore = totalDamageDealtScore * totalDamageDealtScoreWeight
 
     score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
-    return round(score, 4)
+    return (round(score, 4), 3)
 
 def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken):
     if winner:
@@ -192,7 +192,7 @@ def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTa
     totalDamageTakenScore = totalDamageTakenScore * totalDamageTakenScoreWeight
 
     score = killDeathAssistScore + totalDamageDealtScore + totalDamageTakenScore + winScore
-    return round(score, 4)
+    return (round(score, 4), 4)
 
 def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
     if winner:
@@ -224,19 +224,19 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
     neutralMinionsKilledScore = neutralMinionsKilledScore * neutralMinionsKilledScoreWeight
 
     score = killDeathAssistScore + neutralMinionsKilledScore + winScore
-    return round(score, 4)
+    return (round(score, 4), 5)
 
 # -----SQL inserts-----
-def insertSummonerRecord(ID, name, score):
+def insertSummonerRecord(ID, name, score, adcScore, supportScore, midScore, topScore, jungleScore):
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
 
     addPlayer = ("INSERT INTO Players "
-           "(PlayerID, Name, AverageScore)"
-           "VALUES (%s, %s, %s)"
+           "(PlayerID, Name, AverageScore, ADCScore, SupportScore, MidScore, TopScore, JungleScore)"
+           "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
            "ON DUPLICATE KEY UPDATE AverageScore = %s")
-    dataPlayer = (ID, name, score, score)
+    dataPlayer = (ID, name, score, adcScore, supportScore, midScore, topScore, jungleScore, score)
     cursor.execute(addPlayer, dataPlayer)
     connection.commit()
 
@@ -531,6 +531,11 @@ def getSummonerDetailsByName(summonerName):
 # -----Get Basic Match Data-----
 def getSummonerMatches(id):
     summonerScore = 0
+    adcScore = 0
+    supportScore = 0
+    midScore = 0
+    topScore = 0
+    jungleScore = 0
 
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + id + "?api_key=" + KEY
@@ -572,11 +577,37 @@ def getSummonerMatches(id):
                 print("\tlane: " + lane + "\n")
                 print("\trole: " + role + "\n")
 
-            currentScore = getMatchDetails(id, matchId, season, queue)
+            scores = getMatchDetails(id, matchId, season, queue)
+            currentScore = scores[0]
             if str(currentScore) != "None":
                 summonerScore += currentScore
             else:
                 matches -= 1
+
+            if scores[1] == 1:
+                currentADCScore = scores[0]
+                if str(currentADCScore) != NULL:
+                    adcScore += currentADCSScore
+
+            if scores[1] == 2:
+                currentSupportScore = scores[0]
+                if str(currentSupportScore) != NULL:
+                    supportScore += currentSupportScore
+
+            if scores[1] == 3:
+                currentMidScore = scores[0]
+                if str(currentMidScore) != NULL:
+                    midScore += currentMidScore
+
+            if scores[1] == 4:
+                currentTopScore = scores[0]
+                if str(currentTopScore) != NULL:
+                    topScore += currentTopScore
+
+            if scores[1] == 5:
+                currentJungleScore = scores[0]
+                if str(currentJungleScore) != NULL:
+                    jungleScore += currentJungleScore
 
         totalGames = str(response['totalGames'])
         if PRINT:
@@ -585,7 +616,7 @@ def getSummonerMatches(id):
     time.sleep(1)
 
     if response['totalGames'] > 0:
-        return summonerScore / float(totalGames)
+        return ((summonerScore / float(totalGames)), (adcScore / float(totalGames)), (supportScore / float(totalGames)), (midScore / float(totalGames)), (topScore / float(totalGames)), (jungleScore / float(totalGames)))
     else:
         return 0
 
@@ -1001,7 +1032,7 @@ def main():
             ID = summonerDetails[0]
             name = summonerDetails[1]
             score = getSummonerMatches(ID)
-            insertSummonerRecord(ID, name, score)
+            insertSummonerRecord(ID, name, score[0], score[1], score[2], score[3], score[4], score[5])
 
 if __name__ == "__main__":
     main()
