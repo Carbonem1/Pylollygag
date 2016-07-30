@@ -512,7 +512,7 @@ def getSummonerDetailsByName(summonerName):
     if response.status_code != 200:
         if PRINT:
             print("Couldn't get player details by name. \nError, bad status code: ." + str(response.status_code))
-        return
+        return "BadResponse"
 
     response = response.json()
     ID = str(response[summonerName]['id'])
@@ -993,15 +993,15 @@ def getMatchDetails(playerId, id, season, queue):
 def main():
     #getAllStaticData()
     #names = ["huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
-    names = ["konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
+    names = ["recklessmike"]
 
     for name in names:
         summonerDetails = getSummonerDetailsByName(name)
-        ID = summonerDetails[0]
-        name = summonerDetails[1]
-        score = getSummonerMatches(ID)
-
-        insertSummonerRecord(ID, name, score)
+        if(summonerDetails != "BadResponse"):
+            ID = summonerDetails[0]
+            name = summonerDetails[1]
+            score = getSummonerMatches(ID)
+            insertSummonerRecord(ID, name, score)
 
 if __name__ == "__main__":
     main()
