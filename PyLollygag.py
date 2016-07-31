@@ -9,7 +9,9 @@ sys.setdefaultencoding("utf-8")
 from Constants import *
 
 # -----Algorithms-----
+# General algorithm handler
 def algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
+    # return score based on the role that was played
     if lane == "BOTTOM" and role == "DUO_CARRY":
         return adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt)
 
@@ -25,7 +27,9 @@ def algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, 
     if lane == "JUNGLE":
         return jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)
 
+# ADC Algorithm
 def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
+    # add points to score if win
     if winner:
         winScore = 10
     else:
@@ -38,21 +42,28 @@ def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     minionsKilled = int(minionsKilled)
     totalDamageDealt = int(totalDamageDealt)
 
+    # add points based on key variables for the role
+    # kills, deaths, assists
     if deaths != 0:
         killDeathAssistScore = (kills + (1/2 * assists)) / deaths
     else:
         killDeathAssistScore = (kills + (1/2 * assists)) + 1
+    # weigh score based on importance to the role
     killDeathAssistScoreWeight = 3
+    # base score out of 10 points
     if killDeathAssistScore > 10:
         killDeathAssistScore = 10
     killDeathAssistScore  = killDeathAssistScore * killDeathAssistScoreWeight
 
+    # repeat for rest of key variables
+    # minions killed
     minionsKilledScore = minionsKilled / 60
     minionsKilledScoreWeight = 5
     if minionsKilledScore > 10:
         minionsKilledScore = 10
     minionsKilledScore = minionsKilledScore * minionsKilledScoreWeight
 
+    # total damage dealt
     totalDamageDealtScore = totalDamageDealt / 20000
     totalDamageDealtScoreWeight = 2
     if totalDamageDealtScore > 10:
@@ -62,7 +73,9 @@ def adcAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
     return round(score, 4)
 
+# Support Algorithm
 def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal):
+    # see ADC Algorithm and apply here
     if winner:
         winScore = 10
     else:
@@ -120,7 +133,9 @@ def supportAlgorithm(winner, kills, deaths, assists, visionWardsBoughtInGame, si
     score = killDeathAssistScore + visionWardsBoughtInGameScore + sightWardsBoughtInGameScore + wardsPlacedScore + totalTimeCrowdControlDealtScore + totalHealScore
     return round(score, 4)
 
+# Mid Algorithm
 def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt):
+    # see ADC Algorithm and apply here
     if winner:
         winScore = 10
     else:
@@ -157,7 +172,9 @@ def midAlgorithm(winner, kills, deaths, assists, minionsKilled, totalDamageDealt
     score = killDeathAssistScore + minionsKilledScore + totalDamageDealtScore + winScore
     return round(score, 4)
 
+# Top Algorithm
 def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTaken):
+    # see ADC Algorithm and apply here
     if winner:
         winScore = 10
     else:
@@ -194,7 +211,9 @@ def topAlgorithm(winner, kills, deaths, assists, totalDamageDealt, totalDamageTa
     score = killDeathAssistScore + totalDamageDealtScore + totalDamageTakenScore + winScore
     return round(score, 4)
 
+# Jungle Algorithm
 def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle):
+    # see ADC Algorithm and apply here
     if winner:
         winScore = 10
     else:
@@ -227,11 +246,14 @@ def jungleAlgorithm(winner, kills, deaths, assists, neutralMinionsKilled, neutra
     return round(score, 4)
 
 # -----SQL inserts-----
+# Insert Summoner Record
 def insertSummonerRecord(ID, name, score):
+    # establish connection to the server
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
 
     cursor = connection.cursor(buffered = True)
 
+    # insert player with their ID, name, and score
     addPlayer = ("INSERT INTO Players "
            "(PlayerID, Name, AverageScore)"
            "VALUES (%s, %s, %s)"
@@ -240,14 +262,18 @@ def insertSummonerRecord(ID, name, score):
     cursor.execute(addPlayer, dataPlayer)
     connection.commit()
 
+    # close the connection to the database
     cursor.close()
     connection.close()
 
+# Insert Match Record
 def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue):
 
+    # establish connection to the server
     connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
     cursor = connection.cursor(buffered = True)
 
+    # insert match record to the AllSeasons table
     if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
         if PRINT:
             print("inserting match " + str(ID) + "...")
@@ -259,6 +285,7 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
         cursor.execute(SQLCommand, dataMatch)
         connection.commit()
 
+    # insert match record to the table of the season the match was played in
     if season == "SEASON2016":
         if queue == "TEAM_BUILDER_DRAFT_RANKED_5x5" or "RANKED_SOLO_5x5":
             if PRINT:
@@ -343,10 +370,12 @@ def insertMatchRecord(ID, team1PlayerIds, team1PerformanceIds, team2PlayerIds, t
             cursor.execute(SQLCommand, dataMatch)
             connection.commit()
 
+    # close the connection
     cursor.close()
     connection.close()
 
 # -----Get Static Data-----
+# Get All Static Data
 def getAllStaticData():
     getChampionList()
     getItemList()
@@ -354,19 +383,26 @@ def getAllStaticData():
     getRuneList()
     getSummonerSpellList()
 
+# Get Champion List
 def getChampionList():
+    # URL for Riot's API
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?api_key=" + KEY
 
+    # get the response form Riot's API
     response = requests.get(URL)
+    # return if bad code
     if response.status_code != 200:
         if PRINT:
             print("Couldn't get champion list. \nError, bad status code: ." + str(response.status_code))
         return
 
+    # parse response to JSON
     response = response.json()
 
+    # print information if the PRINT flag is True
     if PRINT:
         print("Champions:\n")
+    # assign variables based on JSON response
     for champion in response['data']:
         id = str(response['data'][champion]['id'])
         title = str(response['data'][champion]['title'])
@@ -380,7 +416,9 @@ def getChampionList():
             print("\t\tname: " + name + "\n")
             print("\t\tkey: " + key + "\n")
 
+# Get Item List
 def getItemList():
+    # # see Get Champion List and apply here
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?api_key=" + KEY
 
     response = requests.get(URL)
@@ -404,6 +442,7 @@ def getItemList():
             print("\t\tname: " + name + "\n")
 
 def getMasteryList():
+    # # see Get Champion List and apply here
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery?api_key=" + KEY
 
     response = requests.get(URL)
@@ -428,6 +467,7 @@ def getMasteryList():
             print("\t\tdescription: " + description + "\n")
 
 def getRuneList():
+    # # see Get Champion List and apply here
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune?api_key=" + KEY
 
     response = requests.get(URL)
@@ -452,6 +492,7 @@ def getRuneList():
             print("\t\tdescription: " + description + "\n")
 
 def getSummonerSpellList():
+    # # see Get Champion List and apply here
     URL = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/summoner-spell?api_key=" + KEY
 
     response = requests.get(URL)
@@ -478,16 +519,20 @@ def getSummonerSpellList():
             print("\t\tsummonerLevel: " + summonerLevel + "\n")
 
 # -----Get Summoner Data-----
+# Get Summoner Data (ID)
 def getSummonerDetails(id, score):
+    # URL for Riot's API
     id = str(id)
     URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/" + id + "?api_key=" + KEY
 
+    # get response from API
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
             print("Couldn't get player details. \nError, bad status code: ." + str(response.status_code))
         return
 
+    # assign varibales based on JSON response
     response = response.json()
     ID = str(response[id]['id'])
     name = str(response[id]['name'])
@@ -499,21 +544,26 @@ def getSummonerDetails(id, score):
         print("Name: " + name)
         print("Score: " + score)
 
+    # insert the current summoner record
     insertSummonerRecord(ID, name, score)
 
     time.sleep(1)
 
 # -----Get Summoner Data-----
+# Get Summoner Data (name)
 def getSummonerDetailsByName(summonerName):
     summonerName = str(summonerName)
+    # URL for Riot's API
     URL = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/" + summonerName + "?api_key=" + KEY
 
+    # get response from API
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
             print("Couldn't get player details by name. \nError, bad status code: ." + str(response.status_code))
         return "BadResponse"
 
+    # assign varibales based on JSON response
     response = response.json()
     ID = str(response[summonerName]['id'])
     name = str(response[summonerName]['name'])
@@ -526,15 +576,20 @@ def getSummonerDetailsByName(summonerName):
 
     time.sleep(1)
 
+    # return the ID and name
     return ID, name
 
 # -----Get Basic Match Data-----
+# Get Summoner Matches
 def getSummonerMatches(id):
+    # inialize running summoner score
     summonerScore = 0
 
     id = str(id)
+    # URL for Riot's API
     URL = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + id + "?api_key=" + KEY
 
+    # get response from API
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
@@ -542,11 +597,14 @@ def getSummonerMatches(id):
         return
 
     response = response.json()
+
+    # keep running total of meaningful matches
     matches = 0
 
-
+    # if the player has games in their history, assign variabels accordingly
     if response['totalGames'] > 0:
         for match in response['matches']:
+            # keep track of matches
             matches += 1
             matchNumber = str(matches)
 
@@ -572,10 +630,13 @@ def getSummonerMatches(id):
                 print("\tlane: " + lane + "\n")
                 print("\trole: " + role + "\n")
 
+            # get the current score based on the match details
             currentScore = getMatchDetails(id, matchId, season, queue)
             if str(currentScore) != "None":
+                # keep track of current score
                 summonerScore += currentScore
             else:
+                # if we get a bad score dont count it against the player
                 matches -= 1
 
         totalGames = str(response['totalGames'])
@@ -584,6 +645,7 @@ def getSummonerMatches(id):
 
     time.sleep(1)
 
+    # as long as we had games, return average summoner score
     if response['totalGames'] > 0:
         return summonerScore / float(totalGames)
     else:
@@ -592,14 +654,20 @@ def getSummonerMatches(id):
 # -----Get Match Details-----
 def getMatchDetails(playerId, id, season, queue):
     id = str(id)
+    # URL for Riot's API
     URL = "https://na.api.pvp.net/api/lol/na/v2.2/match/" + id + "?api_key=" + KEY
 
+    # get response from API
     response = requests.get(URL)
     if response.status_code != 200:
         if PRINT:
             print("Couldn't get match details. \nError, bad status code: ." + str(response.status_code))
+        return
 
+    # convert response to JSON
     response = response.json()
+
+    # assign variables based on JSON response
     try:
         region = str(response['region'])
     except KeyError:
@@ -660,6 +728,7 @@ def getMatchDetails(playerId, id, season, queue):
             if PRINT:
                 print("\t\t\t\t\tNo runes found")
 
+        # comment out unimportant varaibels
         unrealKills = str(participant['stats']['unrealKills'])
         item0 = str(participant['stats']['item0'])
         item1 = str(participant['stats']['item1'])
@@ -719,6 +788,7 @@ def getMatchDetails(playerId, id, season, queue):
         neutralMinionsKilled = str(participant['stats']['neutralMinionsKilled'])
         combatPlayerScore = str(participant['stats']['combatPlayerScore'])
 
+        # print varibales if the PRINT flag is True
         if PRINT:
             print("\t\t\t\tStats:\n")
             print("\t\t\t\t\tunrealKills: " + unrealKills + "\n")
@@ -780,6 +850,8 @@ def getMatchDetails(playerId, id, season, queue):
             print("\t\t\t\t\tneutralMinionsKilled: " + neutralMinionsKilled + "\n")
             print("\t\t\t\t\tcombatPlayerScore: " + combatPlayerScore + "\n")
 
+        # continute to assign variables and print
+        # timeline variables
         if PRINT:
             print("\t\t\t\tTimeline:\n")
         if 'xpDiffPerMinDeltas' in str(participant['timeline']):
@@ -953,6 +1025,7 @@ def getMatchDetails(playerId, id, season, queue):
 
         if PRINT:
             print("\t\tParticipantIds:\n")
+        # determine who each player is
         for player in response['participantIdentities']:
             currentParticipantId = str(player['participantId'])
             if currentParticipantId == participantId:
@@ -961,11 +1034,14 @@ def getMatchDetails(playerId, id, season, queue):
                 summonerName = str(player['player']['summonerName'])
                 summonerId = str(player['player']['summonerId'])
 
+                # if the player is the one we are generating the score for, run the algorithm based on their role
                 if summonerId == playerId:
                     summonerScore = algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)
+                # assign team 1 player IDs and performance IDs
                 if int(teamId) == 100:
                     team1PlayerIds += str(summonerId) + "/"
                     team1PerformanceIds += str(algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
+                # assign team 2 player IDs and performance IDs
                 elif int(teamId) == 200:
                     team2PlayerIds += str(summonerId) + "/"
                     team2PerformanceIds += str(algorithmHandler(role, lane, winner, kills, deaths, assists, minionsKilled, totalDamageDealt, totalDamageTaken, visionWardsBoughtInGame, sightWardsBoughtInGame, wardsPlaced, totalTimeCrowdControlDealt, totalHeal, neutralMinionsKilled, neutralMinionsKilledTeamJungle, neutralMinionsKilledEnemyJungle)) + "/"
@@ -977,6 +1053,7 @@ def getMatchDetails(playerId, id, season, queue):
                     print("\t\t\tprofileIcon:" + profileIcon + "\n")
                     print("\t\t\tmatchHistoryUri:" + matchHistoryUri + "\n\n")
 
+        # determine id the player won the game
         if winner == True:
             winningTeam = teamId
         elif teamId == "100":
@@ -984,23 +1061,32 @@ def getMatchDetails(playerId, id, season, queue):
         else:
             winningTeam = "100"
 
+    # insert the match record
     insertMatchRecord(id, team1PlayerIds, team1PerformanceIds, team2PlayerIds, team2PerformanceIds, winningTeam, season, queue)
 
     time.sleep(1)
 
+    # return score for current match
     return summonerScore
 
 def main():
-    #getAllStaticData()
-    #names = ["huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja", "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin", "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
-    names = ["recklessmike"]
+    # pull all static data from Riot's API
+    getAllStaticData()
+    names = ["huni", "impact", "impactful", "inori", "jensen", "keith", "kfo", "kiwikid", "kirei", "konkwon", "lourlo", "maplestreet8", "mash", "matt", "meteos", "moon", "move", "ninja",
+    "nyjacky", "patoy", "piglet", "pirean", "pobelter", "procxin", "reignover", "remi", "rush", "seraph", "shiphtur", "shrimp", "smittyj", "smoothie", "sneaky", "stixxay", "valkrin",
+    "wildturtle", "xmithie", "yazuki", "yellowstar", "youngbin"]
 
+    # for each player in the names array
     for name in names:
+        # get the summoner's details by name
         summonerDetails = getSummonerDetailsByName(name)
+        # check for a bas response
         if(summonerDetails != "BadResponse"):
+            # assign ID, name, and score
             ID = summonerDetails[0]
             name = summonerDetails[1]
             score = getSummonerMatches(ID)
+            # insert summoner with their ID, name, and score
             insertSummonerRecord(ID, name, score)
 
 if __name__ == "__main__":
