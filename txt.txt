@@ -1,0 +1,6 @@
+        connection = mysql.connector.connect(user = USER, password = PASSWORD, host = HOST, database = DATABASE)
+        cursor = connection.cursor()
+        query = ("SELECT PlayerID from Players WHERE PlayerID = " + ID)
+        cursor.execute(query)
+        cursor.close()
+        connection.close()
